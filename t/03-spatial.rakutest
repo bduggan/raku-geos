@@ -1,0 +1,67 @@
+use Test;
+use lib 'lib';
+use GEOS::Native;
+
+# Create two squares that overlap and test their properties
+{
+    my $context = GEOS_init_r();
+    my $reader = GEOSWKTReader_create_r($context);
+    my $writer = GEOSWKTWriter_create_r($context);
+    
+    # Create two squares that overlap
+    my $square1 = GEOSWKTReader_read_r($context, $reader, 'POLYGON((0 0, 2 0, 2 2, 0 2, 0 0))');
+    my $square2 = GEOSWKTReader_read_r($context, $reader, 'POLYGON((1 1, 3 1, 3 3, 1 3, 1 1))');
+    
+    # Test intersection
+    my $intersection = GEOSIntersection_r($context, $square1, $square2);
+    ok $intersection ~~ GEOSGeometry, 'Got valid intersection geometry';
+    
+    # Verify intersection properties
+    my $equals = GEOSEquals_r($context, $intersection, 
+        GEOSWKTReader_read_r($context, $reader, 'POLYGON((1 1, 2 1, 2 2, 1 2, 1 1))'));
+    ok $equals == 1, 'Intersection has correct shape';
+    
+    # Test union
+    my $union = GEOSUnion_r($context, $square1, $square2);
+    ok $union ~~ GEOSGeometry, 'Got valid union geometry';
+    
+    # Test if geometries are valid
+    my $is_valid1 = GEOSisValid_r($context, $square1);
+    my $is_valid2 = GEOSisValid_r($context, $square2);
+    my $is_valid_intersection = GEOSisValid_r($context, $intersection);
+    my $is_valid_union = GEOSisValid_r($context, $union);
+    
+    ok $is_valid1 == 1, 'First square is valid';
+    ok $is_valid2 == 1, 'Second square is valid';
+    ok $is_valid_intersection == 1, 'Intersection is valid';
+    ok $is_valid_union == 1, 'Union is valid';
+    
+    # Test containment relationships
+    my $contains1 = GEOSContains_r($context, $square1, $intersection);
+    my $contains2 = GEOSContains_r($context, $square2, $intersection);
+    ok $contains1 == 1, 'First square contains intersection';
+    ok $contains2 == 1, 'Second square contains intersection';
+    
+    # Test point-in-polygon
+    my $center_point = GEOSWKTReader_read_r($context, $reader, 'POINT(1.5 1.5)');
+    my $contains_center1 = GEOSContains_r($context, $square1, $center_point);
+    my $contains_center2 = GEOSContains_r($context, $square2, $center_point);
+    my $contains_center_int = GEOSContains_r($context, $intersection, $center_point);
+    
+    ok $contains_center1 == 1, 'First square contains center point';
+    ok $contains_center2 == 1, 'Second square contains center point';
+    ok $contains_center_int == 1, 'Intersection contains center point';
+    
+    # Cleanup
+    lives-ok {
+        for $square1, $square2, $intersection, $union, $center_point -> $geom {
+            GEOSGeom_destroy_r($context, $geom);
+        }
+        GEOSWKTReader_destroy_r($context, $reader);
+        GEOSWKTWriter_destroy_r($context, $writer);
+    }, 'Can cleanup all geometric operations test resources';
+    
+    GEOS_finish_r($context);
+}
+
+done-testing;
