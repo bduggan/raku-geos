@@ -1754,7 +1754,7 @@ sub GEOSPreparedDistance_r(GEOSContextHandle, GEOSPreparedGeometry, GEOSGeometry
 #     GEOSContextHandle_t handle,
 #     const GEOSGeometry* g,
 #     double *area);
-sub GEOSArea_r(GEOSContextHandle, Pointer, Pointer) returns num32 is native('geos') is export { * }
+sub GEOSArea_r(GEOSContextHandle, GEOSGeometry, num64 is rw) returns int32 is native(GEOS) is export { * }
 
 # /** \see GEOSLength */
 # extern int GEOS_DLL GEOSLength_r(
@@ -1768,7 +1768,7 @@ sub GEOSArea_r(GEOSContextHandle, Pointer, Pointer) returns num32 is native('geo
 #     const GEOSGeometry* g1,
 #     const GEOSGeometry* g2,
 #     double *dist);
-sub GEOSDistance_r(GEOSContextHandle, GEOSGeometry, GEOSGeometry) returns num64 is native('geos') is export { * } 
+sub GEOSDistance_r(GEOSContextHandle, GEOSGeometry, GEOSGeometry, num64 is rw) returns int32 is native(GEOS) is export { * }
 
 # /** \see GEOSDistanceWithin */
 # extern char GEOS_DLL GEOSDistanceWithin_r(
