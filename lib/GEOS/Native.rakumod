@@ -1988,68 +1988,80 @@ sub GEOSWKBReader_readHEX_r(GEOSContextHandle, Pointer, Str, size_t) returns Poi
 # /** \see GEOSWKBWriter_create */
 # extern GEOSWKBWriter GEOS_DLL *GEOSWKBWriter_create_r(
 #     GEOSContextHandle_t handle);
-# 
+sub GEOSWKBWriter_create_r(GEOSContextHandle) returns Pointer is native(GEOS) is export { * } 
+
 # /** \see GEOSWKBWriter_destroy */
 # extern void GEOS_DLL GEOSWKBWriter_destroy_r(
 #     GEOSContextHandle_t handle,
 #     GEOSWKBWriter* writer);
-# 
+sub GEOSWKBWriter_destroy_r(GEOSContextHandle, Pointer) is native(GEOS) is export { * } 
+
 # /** \see GEOSWKBWriter_write */
 # extern unsigned char GEOS_DLL *GEOSWKBWriter_write_r(
 #     GEOSContextHandle_t handle,
 #     GEOSWKBWriter* writer,
 #     const GEOSGeometry* g,
 #     size_t *size);
-# 
+sub GEOSWKBWriter_write_r(GEOSContextHandle, Pointer, GEOSGeometry, size_t is rw) returns Str is native(GEOS) is export { * }
+
 # /** \see GEOSWKBWriter_writeHEX */
 # extern unsigned char GEOS_DLL *GEOSWKBWriter_writeHEX_r(
 #     GEOSContextHandle_t handle,
 #     GEOSWKBWriter* writer,
 #     const GEOSGeometry* g,
 #     size_t *size);
-# 
+sub GEOSWKBWriter_writeHEX_r(GEOSContextHandle, Pointer, GEOSGeometry, size_t is rw) returns Str is native(GEOS) is export { * } 
+
 # /** \see GEOSWKBWriter_getOutputDimension */
 # extern int GEOS_DLL GEOSWKBWriter_getOutputDimension_r(
 #     GEOSContextHandle_t handle,
 #     const GEOSWKBWriter* writer);
-# 
+sub GEOSWKBWriter_getOutputDimension_r(GEOSContextHandle, Pointer) returns int32 is native(GEOS) is export { * } 
+
 # /** \see GEOSWKBWriter_setOutputDimension */
 # extern void GEOS_DLL GEOSWKBWriter_setOutputDimension_r(
 #     GEOSContextHandle_t handle,
 #     GEOSWKBWriter* writer, int newDimension);
-# 
+sub GEOSWKBWriter_setOutputDimension_r(GEOSContextHandle, Pointer, int32) is native(GEOS) is export { * } 
+
 # /** \see GEOSWKBWriter_getByteOrder */
 # extern int GEOS_DLL GEOSWKBWriter_getByteOrder_r(
 #     GEOSContextHandle_t handle,
 #     const GEOSWKBWriter* writer);
-# 
+sub GEOSWKBWriter_getByteOrder_r(GEOSContextHandle, Pointer) returns int32 is native(GEOS) is export { * } 
+
 # /** \see GEOSWKBWriter_setByteOrder */
 # extern void GEOS_DLL GEOSWKBWriter_setByteOrder_r(
 #     GEOSContextHandle_t handle,
 #     GEOSWKBWriter* writer,
 #     int byteOrder);
-# 
+sub GEOSWKBWriter_setByteOrder_r(GEOSContextHandle, Pointer, int32) is native(GEOS) is export { * } 
+
 # /** \see GEOSWKBWriter_getFlavor */
 # extern int GEOS_DLL GEOSWKBWriter_getFlavor_r(
 #     GEOSContextHandle_t handle,
 #     const GEOSWKBWriter* writer);
-# 
+sub GEOSWKBWriter_getFlavor_r(GEOSContextHandle, Pointer) returns int32 is native(GEOS) is export { * } 
+
 # /** \see GEOSWKBWriter_setFlavor */
 # extern void GEOS_DLL GEOSWKBWriter_setFlavor_r(
 #     GEOSContextHandle_t handle,
 #     GEOSWKBWriter* writer,
 #     int flavor);
-# 
+sub GEOSWKBWriter_setFlavor_r(GEOSContextHandle, Pointer, int32) is native(GEOS) is export { * } 
+
 # /** \see GEOSWKBWriter_getIncludeSRID */
 # extern char GEOS_DLL GEOSWKBWriter_getIncludeSRID_r(
 #     GEOSContextHandle_t handle,
 #     const GEOSWKBWriter* writer);
-# 
+sub GEOSWKBWriter_getIncludeSRID_r(GEOSContextHandle, Pointer) returns int32 is native(GEOS) is export { * } 
+
 # /** \see GEOSWKBWriter_setIncludeSRID */
 # extern void GEOS_DLL GEOSWKBWriter_setIncludeSRID_r(
 #     GEOSContextHandle_t handle,
 #     GEOSWKBWriter* writer, const char writeSRID);
-# 
+sub GEOSWKBWriter_setIncludeSRID_r(GEOSContextHandle, Pointer, int32) is native(GEOS) is export { * } 
+
 # /* ========== GeoJSON Reader ========== */
 # 
 # /** \see GEOSGeoJSONReader_create */
