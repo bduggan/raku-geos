@@ -1,0 +1,21 @@
+{
+    "name" : "GEOS",
+    "source-url" : "https://github.com/bduggan/raku-geos.git",
+    "raku" : "6.*",
+    "build-depends" : [ ],
+    "provides" : {
+        "GEOS::Native" : "lib/GEOS/Native.rakumod"
+    },
+    "tags" : [
+            "geo", "nativecall"
+        ],
+    "depends" : [ "Log::Async" ],
+    "description" : "Raku bindings for libgeos",
+    "test-depends" : [ ],
+    "version" : "0.0.1",
+    "license" : "MIT",
+    "authors" : [
+        "Brian Duggan"
+    ],
+    "auth" : "zef:bduggan"
+}
