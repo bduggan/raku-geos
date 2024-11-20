@@ -32,7 +32,7 @@ The status of this module is EXPERIMENTAL.  Everything may change, and
 some things might not work.  Consult the test suite to see what is
 currently implemented.
 
-Currently the thread safe bindings have been implemented, and there
+Currently the thread-safe bindings have been implemented, and there
 are even a few tests that verify that they work.
 
 =head1 AUTHOR
