@@ -73,7 +73,7 @@ sub GEOSWKTReader_create_r(GEOSContextHandle) returns GEOSWKTReader is native(GE
 sub GEOSWKTReader_read_r( GEOSContextHandle, GEOSWKTReader, Str) returns GEOSGeometry is native(GEOS) is export { * }
 sub GEOSWKTReader_destroy_r(GEOSContextHandle, GEOSWKTReader) is native(GEOS) is export { * }
 sub GEOSWKTWriter_create_r(GEOSContextHandle) returns GEOSWKTWriter is native(GEOS) is export { * }
-sub GEOSWKTWriter_write_r( GEOSContextHandle, GEOSWKTWriter, GEOSGeometry) returns Pointer is native(GEOS) is export { * }
+sub GEOSWKTWriter_write_r( GEOSContextHandle, GEOSWKTWriter, GEOSGeometry) returns Str is native(GEOS) is export { * }
 sub GEOSWKTWriter_destroy_r(GEOSContextHandle, GEOSWKTWriter) is native(GEOS) is export { * }
 
 sub GEOSGeom_destroy_r(GEOSContextHandle, GEOSGeometry) is native(GEOS) is export { * }
