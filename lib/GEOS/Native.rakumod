@@ -7,6 +7,7 @@ constant GEOS = 'geos_c';
 # Opaque types
 class GEOSContextHandle is repr('CPointer') is export { }
 class GEOSGeometry is repr('CPointer') is export { }
+class GEOSPreparedGeometry is repr('CPointer') is export { }
 class GEOSWKTReader is repr('CPointer') is export { }
 class GEOSWKTWriter is repr('CPointer') is export { }
 
@@ -1753,7 +1754,7 @@ sub GEOSPreparedDistance_r(GEOSContextHandle, GEOSPreparedGeometry, GEOSGeometry
 #     GEOSContextHandle_t handle,
 #     const GEOSGeometry* g,
 #     double *area);
-sub GEOSArea_r(GEOSContextHandle, GEOSGeometry) returns num is native('geos') is export { * } 
+sub GEOSArea_r(GEOSContextHandle, Pointer, Pointer) returns num32 is native('geos') is export { * }
 
 # /** \see GEOSLength */
 # extern int GEOS_DLL GEOSLength_r(
