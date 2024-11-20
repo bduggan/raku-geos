@@ -1174,7 +1174,8 @@ sub GEOSBuildArea_r(GEOSContextHandle, GEOSGeometry) returns GEOSGeometry is nat
 #     GEOSContextHandle_t handle,
 #     const GEOSGeometry* g1,
 #     const GEOSGeometry* g2);
-# 
+sub GEOSContains_r(GEOSContextHandle, GEOSGeometry, GEOSGeometry) returns int32 is native(GEOS) is export { * }
+ 
 # /** \see GEOSOverlaps */
 # extern char GEOS_DLL GEOSOverlaps_r(
 #     GEOSContextHandle_t handle,
@@ -1186,7 +1187,8 @@ sub GEOSBuildArea_r(GEOSContextHandle, GEOSGeometry) returns GEOSGeometry is nat
 #     GEOSContextHandle_t handle,
 #     const GEOSGeometry* g1,
 #     const GEOSGeometry* g2);
-# 
+sub GEOSEquals_r(GEOSContextHandle, GEOSGeometry, GEOSGeometry) returns int32 is native(GEOS) is export { * }
+ 
 # /** \see GEOSEqualsExact */
 # extern char GEOS_DLL GEOSEqualsExact_r(
 #     GEOSContextHandle_t handle,
@@ -1483,7 +1485,8 @@ sub GEOSPreparedDistance_r(GEOSContextHandle, GEOSPreparedGeometry, GEOSGeometry
 # extern char GEOS_DLL GEOSisValid_r(
 #     GEOSContextHandle_t handle,
 #     const GEOSGeometry* g);
-# 
+sub GEOSisValid_r(GEOSContextHandle, GEOSGeometry) returns int32 is native(GEOS) is export { * } 
+
 # /** \see GEOSisValidReason */
 # extern char GEOS_DLL *GEOSisValidReason_r(
 #     GEOSContextHandle_t handle,
