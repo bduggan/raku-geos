@@ -81,6 +81,124 @@ enum GEOSWKBFlavors is export (
     GEOS_WKB_ISO => 1,
 );
 
+# /* ========= Prepared Geometry Binary Predicates ========== */
+# 
+# /** \see GEOSPrepare */
+# extern const GEOSPreparedGeometry GEOS_DLL *GEOSPrepare_r(
+#     GEOSContextHandle_t handle,
+#     const GEOSGeometry* g);
+# 
+# /** \see GEOSPreparedGeom_destroy */
+# extern void GEOS_DLL GEOSPreparedGeom_destroy_r(
+#     GEOSContextHandle_t handle,
+#     const GEOSPreparedGeometry* g);
+# 
+# /** \see GEOSPreparedContains */
+# extern char GEOS_DLL GEOSPreparedContains_r(
+#     GEOSContextHandle_t handle,
+#     const GEOSPreparedGeometry* pg1,
+#     const GEOSGeometry* g2);
+# 
+# /** \see GEOSPreparedContainsXY */
+# extern char GEOS_DLL GEOSPreparedContainsXY_r(
+#         GEOSContextHandle_t handle,
+#         const GEOSPreparedGeometry* pg1,
+#         double x,
+#         double y);
+# 
+# /** \see GEOSPreparedContainsProperly */
+# extern char GEOS_DLL GEOSPreparedContainsProperly_r(
+#     GEOSContextHandle_t handle,
+#     const GEOSPreparedGeometry* pg1,
+#     const GEOSGeometry* g2);
+# 
+# /** \see GEOSPreparedCoveredBy */
+# extern char GEOS_DLL GEOSPreparedCoveredBy_r(
+#     GEOSContextHandle_t handle,
+#     const GEOSPreparedGeometry* pg1,
+#     const GEOSGeometry* g2);
+# 
+# /** \see GEOSPreparedCovers */
+# extern char GEOS_DLL GEOSPreparedCovers_r(
+#     GEOSContextHandle_t handle,
+#     const GEOSPreparedGeometry* pg1,
+#     const GEOSGeometry* g2);
+# 
+# /** \see GEOSPreparedCrosses */
+# extern char GEOS_DLL GEOSPreparedCrosses_r(
+#     GEOSContextHandle_t handle,
+#     const GEOSPreparedGeometry* pg1,
+#     const GEOSGeometry* g2);
+# 
+# /** \see GEOSPreparedDisjoint */
+# extern char GEOS_DLL GEOSPreparedDisjoint_r(
+#     GEOSContextHandle_t handle,
+#     const GEOSPreparedGeometry* pg1,
+#     const GEOSGeometry* g2);
+# 
+# /** \see GEOSPreparedIntersects */
+# extern char GEOS_DLL GEOSPreparedIntersects_r(
+#     GEOSContextHandle_t handle,
+#     const GEOSPreparedGeometry* pg1,
+#     const GEOSGeometry* g2);
+# 
+# /** \see GEOSPreparedIntersectsXY */
+# extern char GEOS_DLL GEOSPreparedIntersectsXY_r(
+#         GEOSContextHandle_t handle,
+#         const GEOSPreparedGeometry* pg1,
+#         double x,
+#         double y);
+# 
+# /** \see GEOSPreparedOverlaps */
+# extern char GEOS_DLL GEOSPreparedOverlaps_r(
+#     GEOSContextHandle_t handle,
+#     const GEOSPreparedGeometry* pg1,
+#     const GEOSGeometry* g2);
+# 
+# /** \see GEOSPreparedTouches */
+# extern char GEOS_DLL GEOSPreparedTouches_r(
+#     GEOSContextHandle_t handle,
+#     const GEOSPreparedGeometry* pg1,
+#     const GEOSGeometry* g2);
+# 
+# /** \see GEOSPreparedWithin */
+# extern char GEOS_DLL GEOSPreparedWithin_r(
+#     GEOSContextHandle_t handle,
+#     const GEOSPreparedGeometry* pg1,
+#     const GEOSGeometry* g2);
+# 
+# /** \see GEOSPreparedRelate */
+# extern char GEOS_DLL * GEOSPreparedRelate_r(
+#     GEOSContextHandle_t handle,
+#     const GEOSPreparedGeometry* pg1,
+#     const GEOSGeometry* g2);
+# 
+# /** \see GEOSPreparedRelatePattern */
+# extern char GEOS_DLL GEOSPreparedRelatePattern_r(
+#     GEOSContextHandle_t handle,
+#     const GEOSPreparedGeometry* pg1,
+#     const GEOSGeometry* g2,
+#     const char* im);
+# 
+# /** \see GEOSPreparedNearestPoints */
+# extern GEOSCoordSequence GEOS_DLL *GEOSPreparedNearestPoints_r(
+#     GEOSContextHandle_t handle,
+#     const GEOSPreparedGeometry* pg1,
+#     const GEOSGeometry* g2);
+# 
+# /** \see GEOSPreparedDistance */
+# extern int GEOS_DLL GEOSPreparedDistance_r(
+#     GEOSContextHandle_t handle,
+#     const GEOSPreparedGeometry* pg1,
+#     const GEOSGeometry* g2, double *dist);
+# 
+# /** \see GEOSPreparedDistanceWithin */
+# extern char GEOS_DLL GEOSPreparedDistanceWithin_r(
+#     GEOSContextHandle_t handle,
+#     const GEOSPreparedGeometry* pg1,
+#     const GEOSGeometry* g2, double dist);
+# 
+
 # /**
 # * Callback function for use in spatial index search calls. Pass into
 # * the query function and handle query results as the index
@@ -936,7 +1054,8 @@ sub GEOSUnaryUnion_r(GEOSContextHandle, GEOSGeometry) returns GEOSGeometry is na
 # extern GEOSGeometry GEOS_DLL *GEOSBuildArea_r(
 #     GEOSContextHandle_t handle,
 #     const GEOSGeometry* g);
-# 
+sub GEOSBuildArea_r(GEOSContextHandle, GEOSGeometry) returns GEOSGeometry is native(GEOS) is export { * } 
+
 # /** \see GEOSLineMerge */
 # extern GEOSGeometry GEOS_DLL *GEOSLineMerge_r(
 #     GEOSContextHandle_t handle,
@@ -1098,7 +1217,8 @@ sub GEOSUnaryUnion_r(GEOSContextHandle, GEOSGeometry) returns GEOSGeometry is na
 # extern const GEOSPreparedGeometry GEOS_DLL *GEOSPrepare_r(
 #     GEOSContextHandle_t handle,
 #     const GEOSGeometry* g);
-# 
+sub GEOSPrepare_r(GEOSContextHandle, GEOSGeometry) returns GEOSPreparedGeometry is native(GEOS) is export { * } 
+
 # /** \see GEOSPreparedGeom_destroy */
 # extern void GEOS_DLL GEOSPreparedGeom_destroy_r(
 #     GEOSContextHandle_t handle,
@@ -1202,7 +1322,8 @@ sub GEOSUnaryUnion_r(GEOSContextHandle, GEOSGeometry) returns GEOSGeometry is na
 #     GEOSContextHandle_t handle,
 #     const GEOSPreparedGeometry* pg1,
 #     const GEOSGeometry* g2, double *dist);
-# 
+sub GEOSPreparedDistance_r(GEOSContextHandle, GEOSPreparedGeometry, GEOSGeometry, num64) returns int32 is native(GEOS) is export { * } 
+
 # /** \see GEOSPreparedDistanceWithin */
 # extern char GEOS_DLL GEOSPreparedDistanceWithin_r(
 #     GEOSContextHandle_t handle,
@@ -1632,7 +1753,8 @@ sub GEOSUnaryUnion_r(GEOSContextHandle, GEOSGeometry) returns GEOSGeometry is na
 #     GEOSContextHandle_t handle,
 #     const GEOSGeometry* g,
 #     double *area);
-# 
+sub GEOSArea_r(GEOSContextHandle, GEOSGeometry) returns num is native('geos') is export { * } 
+
 # /** \see GEOSLength */
 # extern int GEOS_DLL GEOSLength_r(
 #     GEOSContextHandle_t handle,
@@ -1645,7 +1767,8 @@ sub GEOSUnaryUnion_r(GEOSContextHandle, GEOSGeometry) returns GEOSGeometry is na
 #     const GEOSGeometry* g1,
 #     const GEOSGeometry* g2,
 #     double *dist);
-# 
+sub GEOSDistance_r(GEOSContextHandle, GEOSGeometry, GEOSGeometry) returns num64 is native('geos') is export { * } 
+
 # /** \see GEOSDistanceWithin */
 # extern char GEOS_DLL GEOSDistanceWithin_r(
 #     GEOSContextHandle_t handle,
