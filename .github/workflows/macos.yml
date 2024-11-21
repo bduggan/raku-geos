@@ -25,6 +25,6 @@ jobs:
       - name: Install Dependencies
         run: zef install --deps-only .
       - name: Install native deps
-        run: brew install libgeos
+        run: brew install geos
       - name: Run Tests
-        run: DYLD_LIBRARY_PATH=. raku ./make -v test
+        run: raku ./make -v test
