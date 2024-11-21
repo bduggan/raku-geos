@@ -19,14 +19,12 @@ my $badges = qq:to/MD/;
 multi MAIN('test', Bool :$v) {
   my $env = '';
   if $*DISTRO ~~ /macos/ {
-    with %*ENV<DYLD_LIBRARY_PATH> -> $path {
-      $env ~= "DYLD_LIBRARY_PATH=$path";
-    }
-  }
+    $env ~= 'DYLD_LIBRARY_PATH=' ~ qx[geos-config --prefix].trim ~ '/lib';
 
-  # "raku $zef" preserves DYLD_LIBRARY_PATH, but just "zef" does not.
-  my $zef = qx[which zef].trim;
-  shell "$env TEST_AUTHOR=1 raku $zef test { $v ?? "-v" !! "" } .";
+    # "raku $zef" preserves DYLD_LIBRARY_PATH, but just "zef" does not.
+    my $zef = qx[which zef].trim;
+    shell "$env TEST_AUTHOR=1 raku $zef test { $v ?? "-v" !! "" } .";
+  }
 }
 
 multi MAIN('dist') {
