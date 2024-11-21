@@ -27,6 +27,6 @@ jobs:
       - name: Install Dependencies
         run: zef install --deps-only .
       - name: Install native deps
-        run: apt install libgeos-dev
+        run: sudo apt install libgeos-dev
       - name: Run Tests
         run: raku ./make -v test

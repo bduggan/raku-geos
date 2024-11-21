@@ -61,15 +61,6 @@ This module provides native bindings to libgeos: https://libgeos.oeg
 The status of this module is EXPERIMENTAL. Everything may change, and some things might not work. Consult the test suite to see what is currently implemented.
 
 Currently the thread-safe bindings have been implemented, and there are even a few tests that verify that they work.
-=======
-DESCRIPTION
-===========
-
-The GEOS::Native module provides low-level bindings to libgeos: https://libgeos.oeg
-
-The status of this module is EXPERIMENTAL. Everything may change, and some things might not work. Consult the test suite to see what is currently implemented.
-
-Currently many of the thread-safe bindings (which end with _r and take a $context) have been implemented.
 
 Note that using the native bindings directly requires careful attention to memory management.
 
