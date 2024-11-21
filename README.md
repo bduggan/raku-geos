@@ -4,21 +4,21 @@
 NAME
 ====
 
-GEOS::Native - Native bindings to the GEOS library
+GEOS - Native bindings to the GEOS library
 
 SYNOPSIS
 ========
 
-Read a WKT string and write it as GeoJSON:
+Convert from WKT to GeoJSON:
 
     use GEOS::Native;
 
     my $wkt = "POINT(1 1)";
     my $ctx = GEOS_init_r();
     my $reader = GEOSWKTReader_create_r($ctx);
-    my $geom-a = GEOSWKTReader_read_r($ctx, $reader, $wkt);
+    my $geom = GEOSWKTReader_read_r($ctx, $reader, $wkt);
     my $geojson-writer = GEOSGeoJSONWriter_create_r($ctx);
-    say GEOSGeoJSONWriter_writeGeometry_r($ctx, $geojson-writer, $geom-a, 1);
+    say GEOSGeoJSONWriter_writeGeometry_r($ctx, $geojson-writer, $geom, 1);
 
     # {
     #  "type": "Point",
@@ -52,12 +52,10 @@ Create two squares and calculate their intersection:
 
     GEOS_finish_r($context);
 
-
-
 DESCRIPTION
 ===========
 
-This module provides native bindings to libgeos: https://libgeos.oeg
+The GEOS::Native module provides low-level bindings to libgeos: https://libgeos.oeg
 
 The status of this module is EXPERIMENTAL. Everything may change, and some things might not work. Consult the test suite to see what is currently implemented.
 
@@ -67,4 +65,5 @@ AUTHOR
 ======
 
 Brian Duggan
+Claude
 
