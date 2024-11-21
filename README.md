@@ -60,7 +60,7 @@ This module provides native bindings to libgeos: https://libgeos.oeg
 
 The status of this module is EXPERIMENTAL. Everything may change, and some things might not work. Consult the test suite to see what is currently implemented.
 
-Currently the thread-safe bindings have been implemented, and there are even a few tests that verify that they work.
+The main focus is on the thread-safe functions (ending in `_r`, and requiring a context object).
 
 Note that using the native bindings directly requires careful attention to memory management.
 
