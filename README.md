@@ -4,7 +4,7 @@
 NAME
 ====
 
-GEOS::Native - Native bindings to the GEOS library
+GEOS - Native bindings to the GEOS library
 
 SYNOPSIS
 ========
@@ -16,9 +16,9 @@ Read a WKT string and write it as GeoJSON:
     my $wkt = "POINT(1 1)";
     my $ctx = GEOS_init_r();
     my $reader = GEOSWKTReader_create_r($ctx);
-    my $geom-a = GEOSWKTReader_read_r($ctx, $reader, $wkt);
+    my $geom = GEOSWKTReader_read_r($ctx, $reader, $wkt);
     my $geojson-writer = GEOSGeoJSONWriter_create_r($ctx);
-    say GEOSGeoJSONWriter_writeGeometry_r($ctx, $geojson-writer, $geom-a, 1);
+    say GEOSGeoJSONWriter_writeGeometry_r($ctx, $geojson-writer, $geom, 1);
 
     # {
     #  "type": "Point",
@@ -52,6 +52,7 @@ Create two squares and calculate their intersection:
 
     GEOS_finish_r($context);
 
+<<<<<<< HEAD
 
 
 DESCRIPTION
@@ -62,9 +63,21 @@ This module provides native bindings to libgeos: https://libgeos.oeg
 The status of this module is EXPERIMENTAL. Everything may change, and some things might not work. Consult the test suite to see what is currently implemented.
 
 Currently the thread-safe bindings have been implemented, and there are even a few tests that verify that they work.
+=======
+DESCRIPTION
+===========
+
+The GEOS::Native module provides low-level bindings to libgeos: https://libgeos.oeg
+
+The status of this module is EXPERIMENTAL. Everything may change, and some things might not work. Consult the test suite to see what is currently implemented.
+
+Currently many of the thread-safe bindings (which end with _r and take a $context) have been implemented.
+
+Note that using the native bindings directly requires careful attention to memory management.
 
 AUTHOR
 ======
 
 Brian Duggan
+Claude
 

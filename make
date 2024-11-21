@@ -1,4 +1,4 @@
-#!/usr/bin/env raku
+#!raku
 
 constant $readme-src = "lib/GEOS/Native.rakumod";
 constant $github-repo = 'bduggan/raku-geos';
@@ -19,10 +19,12 @@ my $badges = qq:to/MD/;
 multi MAIN('test', Bool :$v) {
   my $env = '';
   if $*DISTRO ~~ /macos/ {
-    $env ~= 'DYLD_LIBRARY_PATH=. ';
-  }
+    $env ~= 'DYLD_LIBRARY_PATH=' ~ qx[geos-config --prefix].trim ~ '/lib';
 
-  shell "$env TEST_AUTHOR=1 prove {$v ?? '-v' !! ''} -e 'raku {$v ?? '--ll-exception' !! ''} -Ilib' t/*.rakutest";
+  }
+  # "raku $zef" preserves DYLD_LIBRARY_PATH, but just "zef" does not.
+  my $zef = qx[which zef].trim;
+  shell "$env TEST_AUTHOR=1 raku $zef test { $v ?? "-v" !! "" } .";
 }
 
 multi MAIN('dist') {
