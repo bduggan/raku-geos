@@ -52,8 +52,6 @@ Create two squares and calculate their intersection:
 
     GEOS_finish_r($context);
 
-<<<<<<< HEAD
-
 
 DESCRIPTION
 ===========
