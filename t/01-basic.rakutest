@@ -37,8 +37,9 @@ sub parse-it($wkt) {
 
 my $wkt = "POINT (1 1)";
 my ($wkt-out, $geojson-out) = parse-it("POINT (1 1)");
-# is $wkt-out, $wkt, "WKT round-trip";
-diag $wkt-out; # TODO
+# sometimes this is "POINT (1.0000000000000000 1.0000000000000000)"
+like $wkt-out, /POINT/, "WKT output";
+is $wkt-out.comb(/ (\d+) /).map(+*).join(" "), "1 1", "WKT coordinates";
 if $wkt-out.contains("Error") {
   diag $wkt-out;
   bail-out;
