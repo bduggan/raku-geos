@@ -9,7 +9,7 @@
     "tags" : [
             "geo", "nativecall"
         ],
-    "depends" : [ "Log::Async" ],
+    "depends" : [ "Log::Async", "JSON::Fast" ],
     "description" : "Raku bindings for libgeos",
     "test-depends" : [ ],
     "version" : "0.0.1",
