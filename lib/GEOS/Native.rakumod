@@ -1,4 +1,4 @@
-unit class GEOS::Native;
+unit module GEOS::Native;
 
 =begin pod
 
