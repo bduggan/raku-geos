@@ -35,10 +35,10 @@ Create two squares and calculate their intersection:
     my $context = GEOS_init_r();
     my $reader = GEOSWKTReader_create_r($context);
     my $writer = GEOSWKTWriter_create_r($context);
-    
+
     my $square1 = GEOSWKTReader_read_r($context, $reader, 'POLYGON((0 0, 2 0, 2 2, 0 2, 0 0))');
     my $square2 = GEOSWKTReader_read_r($context, $reader, 'POLYGON((1 1, 3 1, 3 3, 1 3, 1 1))');
- 
+     
     my $intersection = GEOSIntersection_r($context, $square1, $square2);
     say GEOSWKTWriter_write_r($context, $writer, $intersection);
     # POLYGON ((2 2, 2 1, 1 1, 1 2, 2 2))
@@ -51,7 +51,6 @@ Create two squares and calculate their intersection:
     GEOSWKTWriter_destroy_r($context, $writer);
 
     GEOS_finish_r($context);
-
 
 DESCRIPTION
 ===========

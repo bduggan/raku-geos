@@ -4,18 +4,21 @@ unit class GEOS::Native;
 
 =head1 NAME
 
-GEOS::Native - Native bindings to the GEOS library
+GEOS - Native bindings to the GEOS library
 
 =head1 SYNOPSIS
+
+Read a WKT string and write it as GeoJSON:
 
     use GEOS::Native;
 
     my $wkt = "POINT(1 1)";
     my $ctx = GEOS_init_r();
-    my $reader = GEOSWKTReader_create_r($ctx) or die "Could not create reader";
-    my $geom-a = GEOSWKTReader_read_r($ctx, $reader, $wkt) or die "Could not read geometry '$wkt'";
-    my $geojson-writer = GEOSGeoJSONWriter_create_r($ctx) or die "Could not create GeoJSON writer";
-    say GEOSGeoJSONWriter_writeGeometry_r($ctx, $geojson-writer, $geom-a, 1) or die "Could not write GeoJSON";
+    my $reader = GEOSWKTReader_create_r($ctx);
+    my $geom = GEOSWKTReader_read_r($ctx, $reader, $wkt);
+    my $geojson-writer = GEOSGeoJSONWriter_create_r($ctx);
+    say GEOSGeoJSONWriter_writeGeometry_r($ctx, $geojson-writer, $geom, 1);
+
     # {
     #  "type": "Point",
     #  "coordinates": [
@@ -24,20 +27,46 @@ GEOS::Native - Native bindings to the GEOS library
     #  ]
     # }
 
+Create two squares and calculate their intersection:
+
+    use GEOS::Native;
+
+    my $context = GEOS_init_r();
+    my $reader = GEOSWKTReader_create_r($context);
+    my $writer = GEOSWKTWriter_create_r($context);
+
+    my $square1 = GEOSWKTReader_read_r($context, $reader, 'POLYGON((0 0, 2 0, 2 2, 0 2, 0 0))');
+    my $square2 = GEOSWKTReader_read_r($context, $reader, 'POLYGON((1 1, 3 1, 3 3, 1 3, 1 1))');
+ 
+    my $intersection = GEOSIntersection_r($context, $square1, $square2);
+    say GEOSWKTWriter_write_r($context, $writer, $intersection);
+    # POLYGON ((2 2, 2 1, 1 1, 1 2, 2 2))
+
+    for $square1, $square2, $intersection -> $geom {
+        GEOSGeom_destroy_r($context, $geom);
+    }
+
+    GEOSWKTReader_destroy_r($context, $reader);
+    GEOSWKTWriter_destroy_r($context, $writer);
+
+    GEOS_finish_r($context);
+
+
 =head1 DESCRIPTION
 
 This module provides native bindings to libgeos: https://libgeos.oeg
 
-The status of this module is EXPERIMENTAL.  Everything may change, and
-some things might not work.  Consult the test suite to see what is
-currently implemented.
+The status of this module is EXPERIMENTAL. Everything may change, and some things might not work. Consult the test suite to see what is currently implemented.
 
-Currently the thread-safe bindings have been implemented, and there
-are even a few tests that verify that they work.
+The main focus is on the thread-safe functions (ending in `_r`, and requiring a context object).
+
+Note that using the native bindings directly requires careful attention to memory management.
 
 =head1 AUTHOR
 
 Brian Duggan
+
+Claude
 
 =end pod
 
@@ -1298,7 +1327,7 @@ sub GEOSPreparedRelate_r(GEOSContextHandle, GEOSPreparedGeometry, GEOSGeometry) 
 #     const GEOSGeometry* g2,
 #     const char* im);
 sub GEOSPreparedRelatePattern_r(GEOSContextHandle, GEOSPreparedGeometry, GEOSGeometry, Str) returns int32 is native(GEOS) is export { * }
-  
+
 # /** \see GEOSPreparedNearestPoints */
 # extern GEOSCoordSequence GEOS_DLL *GEOSPreparedNearestPoints_r(
 #     GEOSContextHandle_t handle,
@@ -1943,34 +1972,34 @@ sub GEOSOrientationIndex_r(GEOSContextHandle, num64, num64, num64, num64, num64,
 #     GEOSContextHandle_t handle,
 #     GEOSWKTWriter *writer,
 #     char trim);
-sub GEOSWKTWriter_setTrim_r  is native('geos') { * }
+sub GEOSWKTWriter_setTrim_r  is native(GEOS) { * }
 
 # /** \see GEOSWKTWriter_setRoundingPrecision */
 # extern void GEOS_DLL GEOSWKTWriter_setRoundingPrecision_r(
 #     GEOSContextHandle_t handle,
 #     GEOSWKTWriter *writer,
 #     int precision);
-sub GEOSWKTWriter_setRoundingPrecision_r  is native('geos') { * } 
+sub GEOSWKTWriter_setRoundingPrecision_r  is native(GEOS) { * } 
 
 # /** \see GEOSWKTWriter_setOutputDimension */
 # extern void GEOS_DLL GEOSWKTWriter_setOutputDimension_r(
 #     GEOSContextHandle_t handle,
 #     GEOSWKTWriter *writer,
 #     int dim);
-sub GEOSWKTWriter_setOutputDimension_r  is native('geos') { * } 
+sub GEOSWKTWriter_setOutputDimension_r  is native(GEOS) { * } 
 
 # /** \see GEOSWKTWriter_getOutputDimension */
 # extern int  GEOS_DLL GEOSWKTWriter_getOutputDimension_r(
 #     GEOSContextHandle_t handle,
 #     GEOSWKTWriter *writer);
-sub GEOSWKTWriter_getOutputDimension_r  is native('geos') { * } 
+sub GEOSWKTWriter_getOutputDimension_r  is native(GEOS) { * } 
 
 # /** \see GEOSWKTWriter_setOld3D */
 # extern void GEOS_DLL GEOSWKTWriter_setOld3D_r(
 #     GEOSContextHandle_t handle,
 #     GEOSWKTWriter *writer,
 #     int useOld3D);
-sub GEOSWKTWriter_setOld3D_r  is native('geos') { * } 
+sub GEOSWKTWriter_setOld3D_r  is native(GEOS) { * } 
 
 # /** Print the shortest representation of a double. Non-zero absolute values
 #  * that are <1e-4 and >=1e+17 are formatted using scientific notation, and
@@ -1986,7 +2015,7 @@ sub GEOSWKTWriter_setOld3D_r  is native('geos') { * }
 #     unsigned int precision,
 #     char *result
 # );
-sub GEOS_printDouble(num64, uint32, Str) returns int32 is native('geos') { * } 
+sub GEOS_printDouble(num64, uint32, Str) returns int32 is native(GEOS) { * } 
 
 # /* ========== WKB Reader ========== */
 # 
