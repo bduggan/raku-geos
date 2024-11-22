@@ -29,13 +29,13 @@ and high-level wrappers to various functions.
 
 For documentation, please see the individual modules.
 
-* L<GEOS::Native|https://github.com/bduggan/raku-geos/blob/master/lib/GEOS/Native.rakumod> -- low-level interface to libgeos
+* L<GEOS::Native|https://github.com/bduggan/raku-geos/blob/master/docs/lib/GEOS/Native.md> -- low-level interface to libgeos
 
-* L<GEOS::Reader|https://github.com/bduggan/raku-geos/blob/master/lib/GEOS/Reader.rakumod> -- high-level interface to libgeos routines for reading geometries
+* L<GEOS::Reader|https://github.com/bduggan/raku-geos/blob/master/docs/lib/GEOS/Reader.md> -- high-level interface to libgeos routines for reading geometries
 
-* L<GEOS::Writer|https://github.com/bduggan/raku-geos/blob/master/lib/GEOS/Writer.rakumod> -- high-level interface to libgeos routines for serializing geometries
+* L<GEOS::Writer|https://github.com/bduggan/raku-geos/blob/master/docs/lib/GEOS/Writer.md> -- high-level interface to libgeos routines for serializing geometries
 
-* L<GEOS::Calculator|https://github.com/bduggan/raku-geos/blob/master/lib/GEOS/Calculator.rakumod> -- high-level interface to geometry calculations, such as distance, area, etc.
+* L<GEOS::Calculator|https://github.com/bduggan/raku-geos/blob/master/docs/lib/GEOS/Calculator.md> -- high-level interface to geometry calculations, such as distance, area, etc.
 
 =head1 AUTHOR
 
