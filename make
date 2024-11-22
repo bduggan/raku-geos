@@ -1,6 +1,6 @@
 #!raku
 
-constant $readme-src = "lib/GEOS/Native.rakumod";
+constant $readme-src = "lib/GEOS.rakumod";
 constant $github-repo = 'bduggan/raku-geos';
 
 if %*ENV<VERBOSE> {
