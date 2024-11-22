@@ -7,7 +7,8 @@
         "GEOS" : "lib/GEOS.rakumod",
         "GEOS::Native" : "lib/GEOS/Native.rakumod",
         "GEOS::Reader" : "lib/GEOS/Reader.rakumod",
-        "GEOS::Writer" : "lib/GEOS/Writer.rakumod"
+        "GEOS::Writer" : "lib/GEOS/Writer.rakumod",
+        "GEOS::Calculator" : "lib/GEOS/Calculator.rakumod"
     },
     "tags" : [
             "geo", "nativecall"
