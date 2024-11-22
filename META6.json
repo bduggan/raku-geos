@@ -14,7 +14,7 @@
             "geo", "nativecall"
         ],
     "depends" : [ "Log::Async", "JSON::Fast" ],
-    "description" : "Raku bindings for libgeos",
+    "description" : "Raku bindings and wrappers for libgeos",
     "test-depends" : [ ],
     "version" : "0.0.1",
     "license" : "MIT",
