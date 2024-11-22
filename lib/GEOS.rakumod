@@ -20,6 +20,8 @@ my $d = c.distance($x,$y);
 
 say $d; # 1
 
+=end code
+
 =head1 DESCRIPTION
 
 There are a few modules in this distribution: native bindings to libgeos,
@@ -34,8 +36,6 @@ For documentation, please see the individual modules.
 * L<GEOS::Writer> -- high-level interface to libgeos routines for serializing geometries
 
 * L<GEOS::Calculator> -- high-level interface to geometry calculations, such as distance, area, etc.
-
-=end code
 
 =head1 AUTHOR
 

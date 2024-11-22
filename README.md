@@ -19,20 +19,20 @@ SYNOPSIS
 
     say $d; # 1
 
-    =head1 DESCRIPTION
+DESCRIPTION
+===========
 
-    There are a few modules in this distribution: native bindings to libgeos,
-    and high-level wrappers to various functions.
+There are a few modules in this distribution: native bindings to libgeos, and high-level wrappers to various functions.
 
-    For documentation, please see the individual modules.
+For documentation, please see the individual modules.
 
-    * L<GEOS::Native> -- low-level interface to libgeos
+* [GEOS::Native](GEOS::Native) -- low-level interface to libgeos
 
-    * L<GEOS::Reader> -- high-level interface to libgeos routines for reading geometries
+* [GEOS::Reader](GEOS::Reader) -- high-level interface to libgeos routines for reading geometries
 
-    * L<GEOS::Writer> -- high-level interface to libgeos routines for serializing geometries
+* [GEOS::Writer](GEOS::Writer) -- high-level interface to libgeos routines for serializing geometries
 
-    * L<GEOS::Calculator> -- high-level interface to geometry calculations, such as distance, area, etc.
+* [GEOS::Calculator](GEOS::Calculator) -- high-level interface to geometry calculations, such as distance, area, etc.
 
 AUTHOR
 ======
