@@ -1,0 +1,15 @@
+#!raku
+
+use Test;
+
+plan 1;
+
+use GEOS::Calculator 'c';
+use GEOS::Reader;
+
+my $r = GEOS::Reader.new;
+my $x = $r.read-wkt('POINT(1 1)');
+my $y = $r.read-wkt('POINT(1 2)');
+my $d = c.distance($x,$y);
+is $d, 1, 'distance between two points';
+
