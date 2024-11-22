@@ -4,7 +4,10 @@
     "raku" : "6.*",
     "build-depends" : [ ],
     "provides" : {
-        "GEOS::Native" : "lib/GEOS/Native.rakumod"
+        "GEOS" : "lib/GEOS.rakumod",
+        "GEOS::Native" : "lib/GEOS/Native.rakumod",
+        "GEOS::Reader" : "lib/GEOS/Reader.rakumod",
+        "GEOS::Writer" : "lib/GEOS/Writer.rakumod"
     },
     "tags" : [
             "geo", "nativecall"
