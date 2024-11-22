@@ -29,11 +29,18 @@ use GEOS::Geometry;
 
 has $.ctx = GEOS_init_r();
 has $.wkt-writer;
+has $.json-writer;
 
 #| Generate a WKT string
 method write-wkt(GEOS::Geometry $geom --> Str) {
     $!wkt-writer //= GEOSWKTWriter_create_r($!ctx);
     GEOSWKTWriter_write_r($!ctx, $!wkt-writer, $geom.geom);
+}
+
+#| Generate a geojson string
+method write-geojson(GEOS::Geometry $geom, Bool :$indent = True --> Str) {
+    $!json-writer = GEOSGeoJSONWriter_create_r($!ctx);
+    GEOSGeoJSONWriter_writeGeometry_r($!ctx, $!json-writer, $geom.geom, $indent ?? 1 !! 0);
 }
 
 submethod DESTROY {

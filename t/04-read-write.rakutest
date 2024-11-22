@@ -2,6 +2,7 @@
 
 use GEOS::Reader;
 use GEOS::Writer;
+use JSON::Fast;
 
 use Test;
 
@@ -20,6 +21,18 @@ ok $wkt.defined, 'wkt defined';
 $wkt = 'POINT (1.0000000000000000 2.0000000000000000)';
 given $wkt { s:g[ <[0..9.]>+ ] = $/.Int }
 is $wkt, 'POINT (1 2)', 'wkt correct';
+
+{
+  # geojson
+  my $point = $reader.read-geojson('{"type":"Point","coordinates":[1,2]}');
+  ok $point.defined, 'point defined';
+  my $geojson = $writer.write-geojson($point);
+  ok $geojson.defined, 'geojson defined';
+  my $got = from-json($geojson);
+  is $got<type>, 'Point', 'type correct';
+  is $got<coordinates>[0], 1, 'x correct';
+  is $got<coordinates>[1], 2, 'y correct';
+}
 
 done-testing;
 
