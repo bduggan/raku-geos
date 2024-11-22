@@ -3,7 +3,7 @@ head
 
 NAME
 
-GEOS::Reader - Read geometries from WKT, WKB, and GEOJSON
+GEOS::Reader - Parse geometry strings into GEOS::Geometry objects
 
 head
 ====
@@ -15,15 +15,14 @@ SYNOPSIS
     my $reader = GEOS::Reader.new;
 
     my $point = $reader.read-wkt('POINT(1 2)');
-    my $point = $reader.read-wkb($wkb-bytes);
-    my $point = $reader.read-geojson($geojson-string);
+    my $point = $reader.read-geojson("{ 'type': 'Point', 'coordinates': [1, 2] }");
 
 head
 ====
 
 DESCRIPTION
 
-This module provides a simple interface for reading geometries from WKT, WKB, and GEOJSON.
+Read various forms of geometry representations into GEOS::Geometry objects.
 
 ### method read-wkt
 
@@ -33,5 +32,15 @@ method read-wkt(
 ) returns GEOS::Geometry
 ```
 
-Read a geometry from WKB
+Read a geometry from WKT
+
+### method read-geojson
+
+```raku
+method read-geojson(
+    Str $geojson
+) returns GEOS::Geometry
+```
+
+Read geojson
 

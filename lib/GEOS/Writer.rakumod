@@ -4,7 +4,7 @@ unit class GEOS::Writer;
 
 =head NAME
 
-GEOS::Writer - Serialize geometries to WKT, WKB, and GEOJSON
+GEOS::Writer - Serialize geometries into various formats
 
 =head SYNOPSIS
 
@@ -12,13 +12,12 @@ GEOS::Writer - Serialize geometries to WKT, WKB, and GEOJSON
 
     my $writer = GEOS::Writer.new;
 
-    my $point = $writer.write-wkt('POINT(1 2)');
-    my $point = $writer.write-wkb($wkb-bytes);
-    my $point = $writer.write-geojson($geojson-string);
+    say $writer.write-wkt($geometry);
+    say $writer.write-geojson($geometry);
 
 =head DESCRIPTION
 
-This module provides a simple interface for writing geometries as WKT, WKB, and GEOJSON.
+This module provides a simple interface for converting geometry objects into different foramts.
 
 =head1 METHODS
 
