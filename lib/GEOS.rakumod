@@ -29,7 +29,7 @@ and high-level wrappers to various functions.
 
 For documentation, please see the individual modules.
 
-* L<GEOS::Native|https://github.com/bduggan/raku-geos/blob/master/lib/GEOS/Native.rakumod>> -- low-level interface to libgeos
+* L<GEOS::Native|https://github.com/bduggan/raku-geos/blob/master/lib/GEOS/Native.rakumod> -- low-level interface to libgeos
 
 * L<GEOS::Reader|https://github.com/bduggan/raku-geos/blob/master/lib/GEOS/Reader.rakumod> -- high-level interface to libgeos routines for reading geometries
 
