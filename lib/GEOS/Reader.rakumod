@@ -23,17 +23,19 @@ This module provides a simple interface for reading geometries from WKT, WKB, an
 =end pod
 
 use GEOS::Native;
+use GEOS::Geometry;
 
-has $.context = GEOS_init_r();
+has $.ctx = GEOS_init_r();
 has $.wkt-reader;
 
-method read-wkt(Str $wkt) {
-    $!wkt-reader //= GEOSWKTReader_create_r($!context);
-    GEOSWKTReader_read_r($!context, $!wkt-reader, $wkt);
+#| Read a geometry from WKB
+method read-wkt(Str $wkt --> GEOS::Geometry)  {
+    $!wkt-reader //= GEOSWKTReader_create_r($!ctx);
+    GEOS::Geometry.new( geom => GEOSWKTReader_read_r($!ctx, $!wkt-reader, $wkt), :$!ctx );
 }
 
 submethod DESTROY {
-    GEOSWKTReader_destroy_r($!context, $!wkt-reader) if $!wkt-reader;
-    GEOS_finish_r($!context);
+    GEOSWKTReader_destroy_r($!ctx, $!wkt-reader) if $!wkt-reader;
+    GEOS_finish_r($!ctx);
 }
 

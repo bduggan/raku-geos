@@ -22,19 +22,21 @@ class GEOS::Calculator {
 
   =end pod
 
-  use GEOS::Native;
+use GEOS::Native;
+use GEOS::Geometry;
 
-  has $.context = GEOS_init_r();
+has $.context = GEOS_init_r();
 
-  method distance(GEOSGeometry $x, GEOSGeometry $y) {
-    my num64 $distance;
-    GEOSDistance_r($!context, $x, $y, $distance);
-    $distance;
-  }
+#| Calculate the distance between two geometries
+method distance(GEOS::Geometry $x, GEOS::Geometry $y) {
+  my num64 $distance;
+  GEOSDistance_r($!context, $x.geom, $y.geom, $distance);
+  $distance;
+}
 
-  submethod DESTROY {
-    GEOS_finish_r($!context);
-  }
+submethod DESTROY {
+  GEOS_finish_r($!context);
+}
 }
 
 sub EXPORT($c = 'c') {

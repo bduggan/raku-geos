@@ -4,7 +4,7 @@ unit class GEOS::Writer;
 
 =head NAME
 
-GEOS::Writer - Read geometries from WKT, WKB, and GEOJSON
+GEOS::Writer - Serialize geometries to WKT, WKB, and GEOJSON
 
 =head SYNOPSIS
 
@@ -20,20 +20,24 @@ GEOS::Writer - Read geometries from WKT, WKB, and GEOJSON
 
 This module provides a simple interface for writing geometries as WKT, WKB, and GEOJSON.
 
+=head1 METHODS
+
 =end pod
 
 use GEOS::Native;
+use GEOS::Geometry;
 
-has $.context = GEOS_init_r();
+has $.ctx = GEOS_init_r();
 has $.wkt-writer;
 
-method write-wkt($geom) {
-    $!wkt-writer //= GEOSWKTWriter_create_r($!context);
-    GEOSWKTWriter_write_r($!context, $!wkt-writer, $geom);
+#| Generate a WKT string
+method write-wkt(GEOS::Geometry $geom --> Str) {
+    $!wkt-writer //= GEOSWKTWriter_create_r($!ctx);
+    GEOSWKTWriter_write_r($!ctx, $!wkt-writer, $geom.geom);
 }
 
 submethod DESTROY {
-    GEOSWKTWriter_destroy_r($!context, $!wkt-writer) if $!wkt-writer;
-    GEOS_finish_r($!context);
+    GEOSWKTWriter_destroy_r($!ctx, $!wkt-writer) if $!wkt-writer;
+    GEOS_finish_r($!ctx);
 }
 
