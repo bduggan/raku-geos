@@ -16,6 +16,9 @@ ok $point.defined, 'point defined';
 
 my $wkt = $writer.write-wkt($point);
 ok $wkt.defined, 'wkt defined';
+
+$wkt = 'POINT (1.0000000000000000 2.0000000000000000)';
+given $wkt { s:g[ <[0..9.]>+ ] = $/.Int }
 is $wkt, 'POINT (1 2)', 'wkt correct';
 
 done-testing;
