@@ -1,14 +1,10 @@
-head
-====
-
 NAME
+====
 
 GEOS::Writer - Serialize geometries into various formats
 
-head
-====
-
 SYNOPSIS
+========
 
     use GEOS::Writer;
 
@@ -17,10 +13,8 @@ SYNOPSIS
     say $writer.write-wkt($geometry);
     say $writer.write-geojson($geometry);
 
-head
-====
-
 DESCRIPTION
+===========
 
 This module provides a simple interface for converting geometry objects into different foramts.
 

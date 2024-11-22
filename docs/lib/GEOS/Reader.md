@@ -1,14 +1,10 @@
-head
-====
-
 NAME
+====
 
 GEOS::Reader - Parse geometry strings into GEOS::Geometry objects
 
-head
-====
-
 SYNOPSIS
+========
 
     use GEOS::Reader;
 
@@ -17,10 +13,8 @@ SYNOPSIS
     my $point = $reader.read-wkt('POINT(1 2)');
     my $point = $reader.read-geojson("{ 'type': 'Point', 'coordinates': [1, 2] }");
 
-head
-====
-
 DESCRIPTION
+===========
 
 Read various forms of geometry representations into GEOS::Geometry objects.
 

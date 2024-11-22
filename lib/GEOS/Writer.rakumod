@@ -2,11 +2,11 @@ unit class GEOS::Writer;
 
 =begin pod
 
-=head NAME
+=head1 NAME
 
 GEOS::Writer - Serialize geometries into various formats
 
-=head SYNOPSIS
+=head1 SYNOPSIS
 
     use GEOS::Writer;
 
@@ -15,7 +15,7 @@ GEOS::Writer - Serialize geometries into various formats
     say $writer.write-wkt($geometry);
     say $writer.write-geojson($geometry);
 
-=head DESCRIPTION
+=head1 DESCRIPTION
 
 This module provides a simple interface for converting geometry objects into different foramts.
 

@@ -2,11 +2,11 @@ unit class GEOS::Reader;
 
 =begin pod
 
-=head NAME
+=head1 NAME
 
 GEOS::Reader - Parse geometry strings into GEOS::Geometry objects
 
-=head SYNOPSIS
+=head1 SYNOPSIS
 
     use GEOS::Reader;
 
@@ -15,7 +15,7 @@ GEOS::Reader - Parse geometry strings into GEOS::Geometry objects
     my $point = $reader.read-wkt('POINT(1 2)');
     my $point = $reader.read-geojson("{ 'type': 'Point', 'coordinates': [1, 2] }");
 
-=head DESCRIPTION
+=head1 DESCRIPTION
 
 Read various forms of geometry representations into GEOS::Geometry objects.
 
