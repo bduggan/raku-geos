@@ -1,5 +1,9 @@
-0.0.1 2024-11-21
-  Initial release
+0.0.3 2024-11-23
+ - GEOS::Geometry
+ - docs
 
 0.0.2 2024-11-22
-  added wrappers: reader,writer,calculator
+ - added wrappers: reader,writer,calculator
+
+0.0.1 2024-11-21
+ - Initial release
