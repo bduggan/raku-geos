@@ -52,7 +52,7 @@ Create two squares and calculate their intersection:
 DESCRIPTION
 ===========
 
-This module provides native bindings to libgeos: https://libgeos.oeg
+This module provides native bindings to libgeos: https://libgeos.org
 
 The status of this module is EXPERIMENTAL. Everything may change, and some things might not work. Consult the test suite to see what is currently implemented.
 
