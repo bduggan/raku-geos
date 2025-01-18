@@ -14,7 +14,7 @@ try {
   my $geom-a = GEOSWKTReader_read_r($ctx, $reader, $wkt) or die "Could not read geometry '$wkt'";
   my $writer = GEOSWKTWriter_create_r($ctx) or die "Could not create writer";
   my $wkt-ptr = GEOSWKTWriter_write_r($ctx, $writer, $geom-a) or die "Could not write geometry";
-  $wkt-out = nativecast(Str, $wkt-ptr) or die "Could not cast to Str";
+  $wkt-out = $wkt-ptr.Str;
 
   my $geojson-writer = GEOSGeoJSONWriter_create_r($ctx) or die "Could not create GeoJSON writer";
   $geojson-out = GEOSGeoJSONWriter_writeGeometry_r($ctx, $geojson-writer, $geom-a, 1) or die "Could not write GeoJSON";
@@ -22,7 +22,6 @@ try {
   CATCH {
     default {
       say "Error: $_";
-      GEOSFree_r($ctx, $wkt-ptr) if $wkt-ptr;
       GEOSWKTWriter_destroy_r($ctx, $writer) if $writer;
       GEOSGeom_destroy_r($ctx, $geom-a) if $geom-a;
       GEOSWKTReader_destroy_r($ctx, $reader) if $reader;
@@ -32,7 +31,7 @@ try {
   }
 }
 
-exit unless $wkt-out;
+exit note "no output" unless $wkt-out;
 
 say "Geometry: $wkt-out";
 say "GeoJSON: $geojson-out";
