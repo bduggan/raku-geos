@@ -9,7 +9,6 @@
         "GEOS::Reader" : "lib/GEOS/Reader.rakumod",
         "GEOS::Geometry" : "lib/GEOS/Geometry.rakumod",
         "GEOS::Writer" : "lib/GEOS/Writer.rakumod",
-        "GEOS::Calculator" : "lib/GEOS/Calculator.rakumod"
     },
     "tags" : [
             "geo", "nativecall"
