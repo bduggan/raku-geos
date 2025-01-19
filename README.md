@@ -40,10 +40,8 @@ A fraction of the functionality offered includes:
 
 For a more complete list of functions available through this module, see the [GEOS::Geometry](https://github.com/bduggan/raku-geos/blob/master/docs/lib/GEOS/Geometry.md) module.
 
-head
-====
-
 SEE ALSO
+========
 
 * [GEOS::Geometry](https://github.com/bduggan/raku-geos/blob/master/docs/lib/GEOS/Geometry.md) -- GEOS geometries and methods that relate to them.
 
