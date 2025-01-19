@@ -31,13 +31,13 @@ has $.geojson-reader;
 #| Read a geometry from WKT
 method read-wkt(Str $wkt --> GEOS::Geometry)  {
   $!wkt-reader //= GEOSWKTReader_create_r($!ctx);
-  GEOS::Geometry.new( geom => GEOSWKTReader_read_r($!ctx, $!wkt-reader, $wkt), :$!ctx );
+  GEOS::Geometry.new( geom => GEOSWKTReader_read_r($!ctx, $!wkt-reader, $wkt));
 }
 
 #| Read geojson
 method read-geojson(Str $geojson --> GEOS::Geometry) {
    $!geojson-reader //= GEOSGeoJSONReader_create_r($!ctx);
-   GEOS::Geometry.new( geom => GEOSGeoJSONReader_readGeometry_r($!ctx, $!geojson-reader, $geojson), :$!ctx );
+   GEOS::Geometry.new( geom => GEOSGeoJSONReader_readGeometry_r($!ctx, $!geojson-reader, $geojson));
 }
 
 submethod DESTROY {

@@ -34,6 +34,13 @@ method distance(GEOS::Geometry $x, GEOS::Geometry $y) {
   $distance;
 }
 
+#| Calculate the centroid of a geometry
+# sub GEOSGetCentroid_r(GEOSContextHandle, GEOSGeometry) returns GEOSGeometry is native(GEOS) is export { * } 
+method centroid(GEOS::Geometry $x) {
+  my $centroid = GEOSGetCentroid_r($!context, $x.geom);
+  GEOS::Geometry.new: geom => $centroid, ctx => $!context;
+}
+
 submethod DESTROY {
   GEOS_finish_r($!context);
 }
