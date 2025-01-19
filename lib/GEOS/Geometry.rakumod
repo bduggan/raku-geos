@@ -196,3 +196,100 @@ method minimum-circle(--> GEOS::Geometry) {
     GEOS::Geometry.new(:geom($result), :ctx($!ctx));
 }
 
+
+method unary-union(--> GEOS::Geometry) {
+    my $result = GEOSUnaryUnion_r($!ctx, $!geom);
+    GEOS::Geometry.new(:geom($result), :ctx($!ctx));
+}
+
+method snap-to(GEOS::Geometry $other, Num() $tolerance --> GEOS::Geometry) {
+    my $result = GEOSSnap_r($!ctx, $!geom, $other.geom, $tolerance);
+    GEOS::Geometry.new(:geom($result), :ctx($!ctx));
+}
+
+method shared-paths(GEOS::Geometry $other --> GEOS::Geometry) {
+    my $result = GEOSSharedPaths_r($!ctx, $!geom, $other.geom);
+    GEOS::Geometry.new(:geom($result), :ctx($!ctx));
+}
+
+# Topology operations
+method get-num-geometries(--> Int) {
+    GEOSGetNumGeometries_r($!ctx, $!geom);
+}
+
+method get-geometry-n(Int $n --> GEOS::Geometry) {
+    my $result = GEOSGetGeometryN_r($!ctx, $!geom, $n);
+    GEOS::Geometry.new(:geom($result), :ctx($!ctx));
+}
+
+method get-exterior-ring(--> GEOS::Geometry) {
+    my $result = GEOSGetExteriorRing_r($!ctx, $!geom);
+    GEOS::Geometry.new(:geom($result), :ctx($!ctx));
+}
+
+method get-num-interior-rings(--> Int) {
+    GEOSGetNumInteriorRings_r($!ctx, $!geom);
+}
+
+method get-interior-ring-n(Int $n --> GEOS::Geometry) {
+    my $result = GEOSGetInteriorRingN_r($!ctx, $!geom, $n);
+    GEOS::Geometry.new(:geom($result), :ctx($!ctx));
+}
+
+# Additional spatial predicates
+method covers(GEOS::Geometry $other --> Bool) {
+    ? GEOSCovers_r($!ctx, $!geom, $other.geom);
+}
+
+method covered-by(GEOS::Geometry $other --> Bool) {
+    ? GEOSCoveredBy_r($!ctx, $!geom, $other.geom);
+}
+
+method crosses(GEOS::Geometry $other --> Bool) {
+    ? GEOSCrosses_r($!ctx, $!geom, $other.geom);
+}
+
+method disjoint(GEOS::Geometry $other --> Bool) {
+    ? GEOSDisjoint_r($!ctx, $!geom, $other.geom);
+}
+
+# Distance and other metrics
+method project(GEOS::Geometry $other --> Num) {
+    my num64 $result = GEOSProject_r($!ctx, $!geom, $other.geom);
+    $result;
+}
+
+method project-normalized(GEOS::Geometry $other --> Num) {
+    my num64 $result = GEOSProjectNormalized_r($!ctx, $!geom, $other.geom);
+    $result;
+}
+
+method frechet-distance(GEOS::Geometry $other --> Num) {
+    my num64 $distance;
+    GEOSFrechetDistance_r($!ctx, $!geom, $other.geom, $distance);
+    $distance;
+}
+
+# Validation and fixing
+method make-valid(--> GEOS::Geometry) {
+    my $result = GEOSMakeValid_r($!ctx, $!geom);
+    GEOS::Geometry.new(:geom($result), :ctx($!ctx));
+}
+
+method normalize(--> GEOS::Geometry) {
+    # GEOSNormalize_r modifies in place and returns an int status
+    my $status = GEOSNormalize_r($!ctx, $!geom);
+    die "Normalization failed; $status" if $status != 0;
+    
+    # Return a new geometry that's a copy of the normalized one
+    my $writer = GEOSWKTWriter_create_r($!ctx);
+    my $wkt = GEOSWKTWriter_write_r($!ctx, $writer, $!geom);
+    GEOSWKTWriter_destroy_r($!ctx, $writer);
+    
+    my $reader = GEOSWKTReader_create_r($!ctx);
+    my $new_geom = GEOSWKTReader_read_r($!ctx, $reader, $wkt);
+    GEOSWKTReader_destroy_r($!ctx, $reader);
+    
+    GEOS::Geometry.new(:geom($new_geom), :ctx($!ctx));
+}
+

@@ -1,7 +1,7 @@
 use Test;
 use GEOS::Geometry;
 
-plan 38;
+plan 55;
 
 # Test point coordinates
 my $point = GEOS::Geometry.from-geojson('{"type":"Point","coordinates":[1,4]}');
@@ -98,5 +98,64 @@ is-approx $hull.area, 1.0, 'triangle hull area';
 my $complex_line = GEOS::Geometry.from-geojson('{"type":"LineString","coordinates":[[0,0],[0.1,0.1],[0.2,0],[0.3,0.1],[1,1]]}');
 my $simple_line = $complex_line.simplify(0.2);
 ok $simple_line.length < $complex_line.length, 'simplification reduces length';
+
+# Test topology operations
+my $multi_point = GEOS::Geometry.from-geojson('{"type":"MultiPoint","coordinates":[[0,0],[1,1],[2,2]]}');
+is $multi_point.get-num-geometries, 3, 'correct number of geometries in MultiPoint';
+my $first_point = $multi_point.get-geometry-n(0);
+is $first_point.x, 0, 'first point x coordinate';
+is $first_point.y, 0, 'first point y coordinate';
+
+# Test polygon rings
+my $polygon_with_hole = GEOS::Geometry.from-geojson('{"type":"Polygon","coordinates":[[[0,0],[10,0],[10,10],[0,10],[0,0]],[[2,2],[2,8],[8,8],[8,2],[2,2]]]}');
+is $polygon_with_hole.get-num-interior-rings, 1, 'one interior ring';
+my $exterior = $polygon_with_hole.get-exterior-ring;
+my $interior = $polygon_with_hole.get-interior-ring-n(0);
+ok $exterior.length > $interior.length, 'exterior ring longer than interior';
+
+# Test spatial predicates
+my $point_on_boundary = GEOS::Geometry.from-geojson('{"type":"Point","coordinates":[5,0]}');
+my $point_outside = GEOS::Geometry.from-geojson('{"type":"Point","coordinates":[20,20]}');
+ok $polygon_with_hole.touches($point_on_boundary), 'point touches polygon boundary';
+ok $polygon_with_hole.disjoint($point_outside), 'point is disjoint from polygon';
+
+# Test line operations
+my $line1 = GEOS::Geometry.from-geojson('{"type":"LineString","coordinates":[[0,0],[2,2]]}');
+my $line2 = GEOS::Geometry.from-geojson('{"type":"LineString","coordinates":[[2,0],[0,2]]}');
+ok $line1.crosses($line2), 'lines cross';
+my $shared = $line1.shared-paths($line2);
+like $shared.wkt, /EMPTY/, 'no shared paths';
+
+# Test snapping
+my $point_near = GEOS::Geometry.from-geojson('{"type":"Point","coordinates":[0.1,0.1]}');
+my $snapped = $point_near.snap-to($line1, 0.2);
+ok $snapped.distance-to($line1) < 0.0001, 'point snapped to line';
+
+# Test Frechet distance
+my $curve1 = GEOS::Geometry.from-geojson('{"type":"LineString","coordinates":[[0,0],[1,1],[2,2]]}');
+my $curve2 = GEOS::Geometry.from-geojson('{"type":"LineString","coordinates":[[0,0],[1,0],[2,0]]}');
+ok $curve1.frechet-distance($curve2) > 0, 'Frechet distance is positive';
+ok $curve1.frechet-distance($curve2) >= $curve1.hausdorff-distance($curve2), 'Frechet distance >= Hausdorff distance';
+
+# Test invalid geometry fixing
+my $invalid_polygon = GEOS::Geometry.from-geojson('{"type":"Polygon","coordinates":[[[0,0],[1,1],[1,0],[0,1],[0,0]]]}');
+my $valid_polygon = $invalid_polygon.make-valid;
+ok $valid_polygon.is-valid, 'geometry was made valid';
+
+# Test covers/covered-by
+my $big_square = GEOS::Geometry.from-geojson('{"type":"Polygon","coordinates":[[[0,0],[10,0],[10,10],[0,10],[0,0]]]}');
+my $small_square = GEOS::Geometry.from-geojson('{"type":"Polygon","coordinates":[[[1,1],[2,1],[2,2],[1,2],[1,1]]]}');
+ok $big_square.covers($small_square), 'big square covers small square';
+ok $small_square.covered-by($big_square), 'small square is covered by big square';
+
+# Test unary union on multigeometry
+my $multi_polygon = GEOS::Geometry.from-geojson('{"type":"MultiPolygon","coordinates":[[[[0,0],[1,0],[1,1],[0,1],[0,0]]],[[[0.5,0.5],[1.5,0.5],[1.5,1.5],[0.5,1.5],[0.5,0.5]]]]}');
+my $unified = $multi_polygon.unary-union;
+ok $unified.get-num-geometries == 1, 'overlapping polygons were unified';
+
+# Test normalization
+my $unnormalized = GEOS::Geometry.from-geojson('{"type":"LineString","coordinates":[[2,2],[1,1],[0,0]]}');
+my $normalized = $unnormalized.normalize;
+is $normalized.wkt, 'LINESTRING (0 0, 1 1, 2 2)', 'geometry was normalized';
 
 done-testing;
