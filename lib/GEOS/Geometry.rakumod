@@ -2,7 +2,18 @@
 
 =head1 NAME
 
-GEOS::Geometry - Base class for GEOS geometries
+GEOS::Geometry - GEOS geometries.
+
+=head1 DESCRIPTION
+
+This class provides methods for creating and manipulating GEOS geometries.
+
+These are a slightly higher level interface to the GEOS C API than the
+direct bindings that can be found in GEOS::Native.
+
+Note that every object has its own thread context object for thread safety.
+
+=head1 METHODS
 
 =end pod
 
@@ -10,13 +21,14 @@ unit class GEOS::Geometry;
 use GEOS::Native;
 
 has $.geom;
-has $.ctx = GEOS_init_r();
+has $!ctx = GEOS_init_r();
 
 submethod DESTROY {
   GEOSGeom_destroy_r($!ctx, $!geom);
   GEOS_finish_r($!ctx);
 }
 
+#| Create a geometry from GeoJSON
 method from-geojson(Str $geojson) {
     my $ctx = GEOS_init_r();
     my $reader = GEOSGeoJSONReader_create_r($ctx);
@@ -27,6 +39,7 @@ method from-geojson(Str $geojson) {
     self.new(:geom($geom));
 }
 
+#| Serialize the geometry to GeoJSON
 method geojson(Bool :$indent = False) {
     my $writer = GEOSGeoJSONWriter_create_r($!ctx);
     my $geojson = GEOSGeoJSONWriter_writeGeometry_r($!ctx, $writer, $.geom, $indent ?? 1 !! 0);
@@ -34,6 +47,7 @@ method geojson(Bool :$indent = False) {
     $geojson;
 }
 
+#| Serialize the geometry to WKT
 method wkt {
     my $writer = GEOSWKTWriter_create_r($!ctx);
     my $wkt = GEOSWKTWriter_write_r($!ctx, $writer, $.geom);
@@ -41,110 +55,132 @@ method wkt {
     $wkt;
 }
 
-
+#| Get the X coordinate of the first point in the geometry
 method x {
     my num64 $x;
     GEOSGeomGetX_r($!ctx, $.geom, $x);
     $x;
 }
 
+#| Get the Y coordinate of the first point in the geometry
 method y {
     my num64 $y;
     GEOSGeomGetY_r($!ctx, $.geom, $y);
     $y;
 }
 
+#| Get the Z coordinate of the first point in the geometry, or NaN if not available
 method z {
     my num64 $z;
     GEOSGeomGetZ_r($!ctx, $.geom, $z);
     $z;
 }
 
+=begin pod
 
-# Basic Properties
+=head2 Basic properties
+
+=end pod
+
+#|  Area
 method area(--> Num) {
     my num64 $area;
-    GEOSArea_r($!ctx, $!geom, $area);
+    GEOSArea_r($!ctx, $!geom, $area) == 1 or fail "Failed to compute area";
     $area;
 }
 
+#| Length
 method length(--> Num) {
     my num64 $length;
-    GEOSLength_r($!ctx, $!geom, $length);
+    GEOSLength_r($!ctx, $!geom, $length) == 1 or fail "Failed to compute length";
     $length;
 }
 
+#| Number of dimensions (e.g. 0 for points, 2 for polygons)
 method dimension(--> Int) {
     GEOSGeom_getDimensions_r($!ctx, $!geom);
 }
 
+#| Geometry type (e.g. "POINT", "LINESTRING", "POLYGON")
 method geometry-type(--> Str) {
     my $type = GEOSGeomType_r($!ctx, $!geom);
     $type;
 }
 
+#| Check if the geometry is empty
 method is-empty(--> Bool) {
     so GEOSisEmpty_r($!ctx, $!geom) eq 'True';
 }
 
+#| Check if the geometry is valid
 method is-valid(--> Bool) {
-    ? GEOSisValid_r($!ctx, $!geom);
+    so GEOSisValid_r($!ctx, $!geom);
 }
 
+#| Check if the geometry is simple (i.e., does not self-intersect)
 method is-simple(--> Bool) {
-    ? GEOSisSimple_r($!ctx, $!geom);
+    given GEOSisSimple_r($!ctx, $!geom) {
+      when 1 { True }
+      when 0 { False }
+      default { fail "Exception in GEOSisSimple_r"; }
+    }
 }
 
-# Geometric Operations
+=begin pod
+
+=head2 Geometric Operations
+
+=end pod
+
 method envelope(--> GEOS::Geometry) {
-    my $envelope = GEOSEnvelope_r($!ctx, $!geom);
-    GEOS::Geometry.new(:geom($envelope), :ctx($!ctx));
+    my $geom = GEOSEnvelope_r($!ctx, $!geom);
+    GEOS::Geometry.new: :$geom;
 }
 
 method boundary(--> GEOS::Geometry) {
-    my $boundary = GEOSBoundary_r($!ctx, $!geom);
-    GEOS::Geometry.new(:geom($boundary), :ctx($!ctx));
+    my $geom = GEOSBoundary_r($!ctx, $!geom);
+    GEOS::Geometry.new: :$geom;
 }
 
 method convex-hull(--> GEOS::Geometry) {
-    my $hull = GEOSConvexHull_r($!ctx, $!geom);
-    GEOS::Geometry.new(:geom($hull), :ctx($!ctx));
+    my $geom = GEOSConvexHull_r($!ctx, $!geom);
+    GEOS::Geometry.new: :$geom;
 }
 
 method centroid(--> GEOS::Geometry) {
-    my $centroid = GEOSGetCentroid_r($!ctx, $!geom);
-    GEOS::Geometry.new(:geom($centroid), :ctx($!ctx));
+    my $geom = GEOSGetCentroid_r($!ctx, $!geom);
+    GEOS::Geometry.new: :$geom;
 }
 
 method buffer(Num() $distance, Int :$segments = 8 --> GEOS::Geometry) {
-    my $buffered = GEOSBuffer_r($!ctx, $!geom, $distance, $segments);
-    GEOS::Geometry.new(:geom($buffered), :ctx($!ctx));
+    my $geom = GEOSBuffer_r($!ctx, $!geom, $distance, $segments);
+    GEOS::Geometry.new: :$geom;
 }
 
 method simplify(Num() $tolerance --> GEOS::Geometry) {
-    my $simplified = GEOSSimplify_r($!ctx, $!geom, $tolerance);
-    GEOS::Geometry.new(:geom($simplified), :ctx($!ctx));
+    my $geom = GEOSSimplify_r($!ctx, $!geom, $tolerance);
+    GEOS::Geometry.new: :$geom;
 }
 
 # Geometric Set Operations
 method intersection(GEOS::Geometry $other --> GEOS::Geometry) {
-    my $result = GEOSIntersection_r($!ctx, $!geom, $other.geom);
-    GEOS::Geometry.new(:geom($result), :ctx($!ctx));
+    my $geom = GEOSIntersection_r($!ctx, $!geom, $other.geom);
+    GEOS::Geometry.new: :$geom;
 }
 
 method union(GEOS::Geometry $other --> GEOS::Geometry) {
-    my $result = GEOSUnion_r($!ctx, $!geom, $other.geom);
-    GEOS::Geometry.new(:geom($result), :ctx($!ctx));
+    my $geom = GEOSUnion_r($!ctx, $!geom, $other.geom);
+    GEOS::Geometry.new: :$geom;
 }
 
 method difference(GEOS::Geometry $other --> GEOS::Geometry) {
-    my $result = GEOSDifference_r($!ctx, $!geom, $other.geom);
-    GEOS::Geometry.new(:geom($result), :ctx($!ctx));
+    my $geom = GEOSDifference_r($!ctx, $!geom, $other.geom);
+    GEOS::Geometry.new: :$geom;
 }
 
 method sym-difference(GEOS::Geometry $other --> GEOS::Geometry) {
-    my $result = GEOSSymDifference_r($!ctx, $!geom, $other.geom);
-    GEOS::Geometry.new(:geom($result), :ctx($!ctx));
+    my $geom = GEOSSymDifference_r($!ctx, $!geom, $other.geom);
+    GEOS::Geometry.new :$geom;
 }
 
 # Spatial Predicates
@@ -295,7 +331,7 @@ method normalize(--> GEOS::Geometry) {
 
 method reverse(--> GEOS::Geometry) {
     my $result = GEOSReverse_r($!ctx, $!geom);
-    GEOS::Geometry.new(:geom($result), :ctx($!ctx));
+    GEOS::Geometry.new(:geom($result));
 }
 
 method get-precision(--> Num) {

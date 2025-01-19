@@ -1,0 +1,28 @@
+# #!raku
+
+use GEOS::Geometry;
+use Test;
+
+# test multiple threads
+
+my @promises;
+my $line = GEOS::Geometry.from-geojson('{"type":"LineString","coordinates":[[0,0],[1,1],[2,2]]}');
+my $reversed = $line.reverse;
+my @coords = $reversed.get-coordinates;
+is-deeply @coords, [[2e0,2e0], [1e0,1e0], [0e0,0e0]], 'reversed coordinates are correct';
+
+for 1..10 {
+  @promises.push: start {
+      my $line = GEOS::Geometry.from-geojson('{"type":"LineString","coordinates":[[0,0],[1,1],[2,2]]}');
+      ok $line, 'line created';
+      is-deeply $line.get-coordinates, [[0e0,0e0], [1e0,1e0], [2e0,2e0]], 'coordinates are correct';
+      my $reversed = $line.reverse;
+      my @coords = $reversed.get-coordinates;
+      is-deeply @coords, [[2e0,2e0], [1e0,1e0], [0e0,0e0]], 'reversed coordinates are correct';
+  };
+}
+
+await Promise.allof( @promises );
+
+done-testing;
+
