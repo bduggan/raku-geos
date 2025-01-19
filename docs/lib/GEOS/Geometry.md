@@ -477,3 +477,38 @@ method normalize() returns Bool
 
 Normalize the geometry
 
+### method reverse
+
+```raku
+method reverse() returns GEOS::Geometry
+```
+
+Reverse the geometry
+
+### method get-precision
+
+```raku
+method get-precision() returns Num
+```
+
+Get the precision of the geometry
+
+### method set-precision
+
+```raku
+method set-precision(
+    Num(Any) $precision,
+    Bool :$preserve-topology = Bool::True
+) returns GEOS::Geometry
+```
+
+Set the precision of the geometry
+
+### method get-coordinates
+
+```raku
+method get-coordinates() returns List
+```
+
+Get the coordinates of the geometry
+
