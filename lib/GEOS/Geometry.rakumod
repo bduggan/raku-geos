@@ -60,3 +60,69 @@ method z {
     $z;
 }
 
+
+# Basic Properties
+method area(--> Num) {
+    my num64 $area;
+    GEOSArea_r($!ctx, $!geom, $area);
+    $area;
+}
+
+method length(--> Num) {
+    my num64 $length;
+    GEOSLength_r($!ctx, $!geom, $length);
+    $length;
+}
+
+method dimension(--> Int) {
+    GEOSGeom_getDimensions_r($!ctx, $!geom);
+}
+
+method geometry-type(--> Str) {
+    my $type = GEOSGeomType_r($!ctx, $!geom);
+    $type;
+}
+
+method is-empty(--> Bool) {
+    so GEOSisEmpty_r($!ctx, $!geom) eq 'True';
+}
+
+method is-valid(--> Bool) {
+    ? GEOSisValid_r($!ctx, $!geom);
+}
+
+method is-simple(--> Bool) {
+    ? GEOSisSimple_r($!ctx, $!geom);
+}
+
+# Geometric Operations
+method envelope(--> GEOS::Geometry) {
+    my $envelope = GEOSEnvelope_r($!ctx, $!geom);
+    GEOS::Geometry.new(:geom($envelope), :ctx($!ctx));
+}
+
+method boundary(--> GEOS::Geometry) {
+    my $boundary = GEOSBoundary_r($!ctx, $!geom);
+    GEOS::Geometry.new(:geom($boundary), :ctx($!ctx));
+}
+
+method convex-hull(--> GEOS::Geometry) {
+    my $hull = GEOSConvexHull_r($!ctx, $!geom);
+    GEOS::Geometry.new(:geom($hull), :ctx($!ctx));
+}
+
+method centroid(--> GEOS::Geometry) {
+    my $centroid = GEOSGetCentroid_r($!ctx, $!geom);
+    GEOS::Geometry.new(:geom($centroid), :ctx($!ctx));
+}
+
+method buffer(Num() $distance, Int :$segments = 8 --> GEOS::Geometry) {
+    my $buffered = GEOSBuffer_r($!ctx, $!geom, $distance, $segments);
+    GEOS::Geometry.new(:geom($buffered), :ctx($!ctx));
+}
+
+method simplify(Num() $tolerance --> GEOS::Geometry) {
+    my $simplified = GEOSSimplify_r($!ctx, $!geom, $tolerance);
+    GEOS::Geometry.new(:geom($simplified), :ctx($!ctx));
+}
+

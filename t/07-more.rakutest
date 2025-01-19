@@ -1,0 +1,44 @@
+use Test;
+use GEOS::Geometry;
+
+plan 20;
+
+# Test point coordinates
+my $point = GEOS::Geometry.from-geojson('{"type":"Point","coordinates":[1,4]}');
+is $point.x, 1, 'x coordinate';
+is $point.y, 4, 'y coordinate';
+is $point.z, NaN, 'z coordinate';
+is $point.geometry-type, 'Point', 'geometry type';
+is $point.dimension, 0, 'point dimension';
+ok !$point.is-empty, 'point is not empty';
+ok $point.is-valid, 'point is valid';
+ok $point.is-simple, 'point is simple';
+
+# Test polygon properties
+my $polygon = GEOS::Geometry.from-geojson('{"type":"Polygon","coordinates":[[[0,0],[0,4],[4,4],[4,0],[0,0]]]}');
+is $polygon.geometry-type, 'Polygon', 'polygon type';
+is $polygon.dimension, 2, 'polygon dimension';
+is-approx $polygon.area, 16.0, 'polygon area';
+is-approx $polygon.length, 16.0, 'polygon perimeter';
+
+# Test geometric operations
+my $buffered = $point.buffer(1);
+ok $buffered.area > 3.1, 'buffer creates larger area';
+ok $buffered.area < 3.15, 'buffer area is reasonable';
+
+my $centroid = $polygon.centroid;
+is-approx $centroid.x, 2.0, 'centroid x';
+is-approx $centroid.y, 2.0, 'centroid y';
+
+my $envelope = $polygon.envelope;
+is $envelope.geometry-type, 'Polygon', 'envelope type';
+is-approx $envelope.area, 16.0, 'envelope area';
+
+# Test serialization
+my $wkt = $point.wkt;
+like $wkt, /^'POINT'/, 'WKT format';
+
+my $geojson = $point.geojson;
+like $geojson, /'Point'/, 'GeoJSON format';
+
+done-testing;
