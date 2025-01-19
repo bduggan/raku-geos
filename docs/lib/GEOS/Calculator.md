@@ -25,3 +25,13 @@ method distance(
 
 Calculate the distance between two geometries
 
+### method centroid
+
+```raku
+method centroid(
+    GEOS::Geometry $x
+) returns Mu
+```
+
+Calculate the centroid of a geometry
+

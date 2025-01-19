@@ -132,80 +132,102 @@ method is-simple(--> Bool) {
 
 =end pod
 
+#| Get the envelope of the geometry
 method envelope(--> GEOS::Geometry) {
     my $geom = GEOSEnvelope_r($!ctx, $!geom);
     GEOS::Geometry.new: :$geom;
 }
 
+#| Get the boundary of the geometry
 method boundary(--> GEOS::Geometry) {
     my $geom = GEOSBoundary_r($!ctx, $!geom);
     GEOS::Geometry.new: :$geom;
 }
 
+#| Get the convex hull of the geometry
 method convex-hull(--> GEOS::Geometry) {
     my $geom = GEOSConvexHull_r($!ctx, $!geom);
     GEOS::Geometry.new: :$geom;
 }
 
+#| Get the centroid of the geometry
 method centroid(--> GEOS::Geometry) {
     my $geom = GEOSGetCentroid_r($!ctx, $!geom);
     GEOS::Geometry.new: :$geom;
 }
 
+#| Buffer the geometry by a specified distance
 method buffer(Num() $distance, Int :$segments = 8 --> GEOS::Geometry) {
     my $geom = GEOSBuffer_r($!ctx, $!geom, $distance, $segments);
     GEOS::Geometry.new: :$geom;
 }
 
+#| Simplify the geometry by a specified tolerance
 method simplify(Num() $tolerance --> GEOS::Geometry) {
     my $geom = GEOSSimplify_r($!ctx, $!geom, $tolerance);
     GEOS::Geometry.new: :$geom;
 }
 
-# Geometric Set Operations
+#| Get the intersection of two geometries
 method intersection(GEOS::Geometry $other --> GEOS::Geometry) {
     my $geom = GEOSIntersection_r($!ctx, $!geom, $other.geom);
     GEOS::Geometry.new: :$geom;
 }
 
+#| Get the union of two geometries
 method union(GEOS::Geometry $other --> GEOS::Geometry) {
     my $geom = GEOSUnion_r($!ctx, $!geom, $other.geom);
     GEOS::Geometry.new: :$geom;
 }
 
+#| Get the difference between two geometries
 method difference(GEOS::Geometry $other --> GEOS::Geometry) {
     my $geom = GEOSDifference_r($!ctx, $!geom, $other.geom);
     GEOS::Geometry.new: :$geom;
 }
 
+#| Get the symmetric difference between two geometries
 method sym-difference(GEOS::Geometry $other --> GEOS::Geometry) {
     my $geom = GEOSSymDifference_r($!ctx, $!geom, $other.geom);
     GEOS::Geometry.new :$geom;
 }
 
+# like so, but many functions return 1 on true, 0 on false, 2 on exception
+sub soo($val) {
+  return True if $val == 1;
+  return False if $val == 0;
+  fail "Unexpected return value: $val";
+}
+
 # Spatial Predicates
+#| Check if the geometry contains another geometry
 method contains(GEOS::Geometry $other --> Bool) {
-    ? GEOSContains_r($!ctx, $!geom, $other.geom);
+    soo GEOSContains_r($!ctx, $!geom, $other.geom);
 }
 
+#| Check if the geometry intersects another geometry
 method intersects(GEOS::Geometry $other --> Bool) {
-    ? GEOSIntersects_r($!ctx, $!geom, $other.geom);
+   soo  GEOSIntersects_r($!ctx, $!geom, $other.geom);
 }
 
+#| Check if the geometry is within another geometry
 method within(GEOS::Geometry $other --> Bool) {
-    ? GEOSWithin_r($!ctx, $!geom, $other.geom);
+   soo GEOSWithin_r($!ctx, $!geom, $other.geom);
 }
 
+#| Check if the geometry touches another geometry
 method touches(GEOS::Geometry $other --> Bool) {
-    ? GEOSTouches_r($!ctx, $!geom, $other.geom);
+   soo GEOSTouches_r($!ctx, $!geom, $other.geom);
 }
 
+#| Check if the geometry overlaps another geometry
 method overlaps(GEOS::Geometry $other --> Bool) {
-    ? GEOSOverlaps_r($!ctx, $!geom, $other.geom);
+   soo GEOSOverlaps_r($!ctx, $!geom, $other.geom);
 }
 
+#| Check if the geometry is equal to another geometry
 method equals(GEOS::Geometry $other --> Bool) {
-    ? GEOSEquals_r($!ctx, $!geom, $other.geom);
+   soo GEOSEquals_r($!ctx, $!geom, $other.geom);
 }
 
 # Distance Operations
