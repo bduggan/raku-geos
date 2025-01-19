@@ -126,3 +126,73 @@ method simplify(Num() $tolerance --> GEOS::Geometry) {
     GEOS::Geometry.new(:geom($simplified), :ctx($!ctx));
 }
 
+# Geometric Set Operations
+method intersection(GEOS::Geometry $other --> GEOS::Geometry) {
+    my $result = GEOSIntersection_r($!ctx, $!geom, $other.geom);
+    GEOS::Geometry.new(:geom($result), :ctx($!ctx));
+}
+
+method union(GEOS::Geometry $other --> GEOS::Geometry) {
+    my $result = GEOSUnion_r($!ctx, $!geom, $other.geom);
+    GEOS::Geometry.new(:geom($result), :ctx($!ctx));
+}
+
+method difference(GEOS::Geometry $other --> GEOS::Geometry) {
+    my $result = GEOSDifference_r($!ctx, $!geom, $other.geom);
+    GEOS::Geometry.new(:geom($result), :ctx($!ctx));
+}
+
+method sym-difference(GEOS::Geometry $other --> GEOS::Geometry) {
+    my $result = GEOSSymDifference_r($!ctx, $!geom, $other.geom);
+    GEOS::Geometry.new(:geom($result), :ctx($!ctx));
+}
+
+# Spatial Predicates
+method contains(GEOS::Geometry $other --> Bool) {
+    ? GEOSContains_r($!ctx, $!geom, $other.geom);
+}
+
+method intersects(GEOS::Geometry $other --> Bool) {
+    ? GEOSIntersects_r($!ctx, $!geom, $other.geom);
+}
+
+method within(GEOS::Geometry $other --> Bool) {
+    ? GEOSWithin_r($!ctx, $!geom, $other.geom);
+}
+
+method touches(GEOS::Geometry $other --> Bool) {
+    ? GEOSTouches_r($!ctx, $!geom, $other.geom);
+}
+
+method overlaps(GEOS::Geometry $other --> Bool) {
+    ? GEOSOverlaps_r($!ctx, $!geom, $other.geom);
+}
+
+method equals(GEOS::Geometry $other --> Bool) {
+    ? GEOSEquals_r($!ctx, $!geom, $other.geom);
+}
+
+# Distance Operations
+method distance-to(GEOS::Geometry $other --> Num) {
+    my num64 $distance;
+    GEOSDistance_r($!ctx, $!geom, $other.geom, $distance);
+    $distance;
+}
+
+method hausdorff-distance(GEOS::Geometry $other --> Num) {
+    my num64 $distance;
+    GEOSHausdorffDistance_r($!ctx, $!geom, $other.geom, $distance);
+    $distance;
+}
+
+# Additional Geometric Operations
+method oriented-envelope(--> GEOS::Geometry) {
+    my $result = GEOSMinimumRotatedRectangle_r($!ctx, $!geom);
+    GEOS::Geometry.new(:geom($result), :ctx($!ctx));
+}
+
+method minimum-circle(--> GEOS::Geometry) {
+    my $result = GEOSMinimumBoundingCircle_r($!ctx, $!geom);
+    GEOS::Geometry.new(:geom($result), :ctx($!ctx));
+}
+
