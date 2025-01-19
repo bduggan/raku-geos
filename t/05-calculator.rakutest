@@ -2,14 +2,18 @@
 
 use Test;
 
-plan 1;
+plan 3;
 
 use GEOS::Calculator 'c';
-use GEOS::Reader;
+use GEOS::Geometry;
 
-my $r = GEOS::Reader.new;
-my $x = $r.read-wkt('POINT(1 1)');
-my $y = $r.read-wkt('POINT(1 2)');
+my $x = GEOS::Geometry.from-geojson('{"type":"Point","coordinates":[0,0]}');
+my $y = GEOS::Geometry.from-geojson('{"type":"Point","coordinates":[2,0]}');
+
 my $d = c.distance($x,$y);
-is $d, 1, 'distance between two points';
+is $d, 2, 'distance between two points';
+like c.centroid($x).wkt, /POINT/, 'centroid of a point is a point';
+is c.centroid($x).wkt, 'POINT (0 0)', 'centroid of a point is the point itself';
 
+done-testing;
+ 

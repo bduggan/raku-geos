@@ -41,3 +41,22 @@ method wkt {
     $wkt;
 }
 
+
+method x {
+    my num64 $x;
+    GEOSGeomGetX_r($!ctx, $.geom, $x);
+    $x;
+}
+
+method y {
+    my num64 $y;
+    GEOSGeomGetY_r($!ctx, $.geom, $y);
+    $y;
+}
+
+method z {
+    my num64 $z;
+    GEOSGeomGetZ_r($!ctx, $.geom, $z);
+    $z;
+}
+
