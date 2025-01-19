@@ -413,21 +413,21 @@ sub GEOSCoordSeq_setOrdinate_r(GEOSContextHandle, Pointer, uint32, uint32, num64
 #     GEOSContextHandle_t handle,
 #     const GEOSCoordSequence* s,
 #     unsigned int idx, double *val);
-sub GEOSCoordSeq_getX_r(GEOSContextHandle, Pointer, uint32, num64) returns int32 is native(GEOS) is export { * } 
+sub GEOSCoordSeq_getX_r(GEOSContextHandle, Pointer, uint32, num64 is rw) returns int32 is native(GEOS) is export { * } 
 
 # /** \see GEOSCoordSeq_getY */
 # extern int GEOS_DLL GEOSCoordSeq_getY_r(
 #     GEOSContextHandle_t handle,
 #     const GEOSCoordSequence* s,
 #     unsigned int idx, double *val);
-sub GEOSCoordSeq_getY_r(GEOSContextHandle, Pointer, uint32, num64) returns int32 is native(GEOS) is export { * } 
+sub GEOSCoordSeq_getY_r(GEOSContextHandle, Pointer, uint32, num64 is rw) returns int32 is native(GEOS) is export { * } 
 
 # /** \see GEOSCoordSeq_getZ */
 # extern int GEOS_DLL GEOSCoordSeq_getZ_r(
 #     GEOSContextHandle_t handle,
 #     const GEOSCoordSequence* s,
 #     unsigned int idx, double *val);
-sub GEOSCoordSeq_getZ_r(GEOSContextHandle, Pointer, uint32, num64) returns int32 is native(GEOS) is export { * } 
+sub GEOSCoordSeq_getZ_r(GEOSContextHandle, Pointer, uint32, num64 is rw) returns int32 is native(GEOS) is export { * } 
 
 # /** \see GEOSCoordSeq_getXY */
 # extern int GEOS_DLL GEOSCoordSeq_getXY_r(
@@ -458,7 +458,7 @@ sub GEOSCoordSeq_getOrdinate_r(GEOSContextHandle, Pointer, uint32, uint32, Point
 #     GEOSContextHandle_t handle,
 #     const GEOSCoordSequence* s,
 #     unsigned int *size);
-sub GEOSCoordSeq_getSize_r(GEOSContextHandle, Pointer, Pointer) returns int32 is native(GEOS) is export { * } 
+sub GEOSCoordSeq_getSize_r(GEOSContextHandle, Pointer, uint32 is rw) returns int32 is native(GEOS) is export { * } 
 
 # /** \see GEOSCoordSeq_getDimensions */
 # extern int GEOS_DLL GEOSCoordSeq_getDimensions_r(

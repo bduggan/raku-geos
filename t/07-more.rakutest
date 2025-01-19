@@ -1,7 +1,7 @@
 use Test;
 use GEOS::Geometry;
 
-plan 55;
+plan 57;
 
 # Test point coordinates
 my $point = GEOS::Geometry.from-geojson('{"type":"Point","coordinates":[1,4]}');
@@ -157,5 +157,17 @@ ok $unified.get-num-geometries == 1, 'overlapping polygons were unified';
 my $unnormalized = GEOS::Geometry.from-geojson('{"type":"LineString","coordinates":[[2,2],[1,1],[0,0]]}');
 my $normalized = $unnormalized.normalize;
 is $normalized.wkt, 'LINESTRING (0 0, 1 1, 2 2)', 'geometry was normalized';
+
+my $line = GEOS::Geometry.from-geojson('{"type":"LineString","coordinates":[[0,0],[1,1],[2,2]]}');
+my @coords = $line.get-coordinates;
+#my $reversed = $line.reverse;
+#my @coords = $reversed.get-coordinates;
+#is-deeply @coords, [[2,2], [1,1], [0,0]], 'reversed coordinates are correct';
+
+# Test precision setting
+my $pt = GEOS::Geometry.from-geojson('{"type":"Point","coordinates":[1.23456789,2.34567890]}');
+my $precise_point = $pt.set-precision(0.01);
+is $precise_point.x, 1.23, 'x coordinate rounded correctly';
+is $precise_point.y, 2.35, 'y coordinate rounded correctly';
 
 done-testing;

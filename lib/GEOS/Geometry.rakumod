@@ -293,3 +293,33 @@ method normalize(--> GEOS::Geometry) {
     GEOS::Geometry.new(:geom($new_geom), :ctx($!ctx));
 }
 
+method reverse(--> GEOS::Geometry) {
+    my $result = GEOSReverse_r($!ctx, $!geom);
+    GEOS::Geometry.new(:geom($result), :ctx($!ctx));
+}
+
+method get-precision(--> Num) {
+    my num64 $precision;
+    GEOSGeom_getPrecision_r($!ctx, $!geom, $precision);
+    $precision;
+}
+
+method set-precision(Num() $precision, Bool :$preserve-topology = True --> GEOS::Geometry) {
+    my $result = GEOSGeom_setPrecision_r($!ctx, $!geom, $precision, $preserve-topology ?? 1 !! 0);
+    GEOS::Geometry.new(:geom($result), :ctx($!ctx));
+}
+
+method get-coordinates(--> List) {
+  my $coord_seq = GEOSGeom_getCoordSeq_r($!ctx, $!geom);
+  my uint32 $size;
+  GEOSCoordSeq_getSize_r($!ctx, $coord_seq, $size);
+  my @coords;
+  for ^$size -> $i {
+    my num64 ($x, $y);
+    GEOSCoordSeq_getX_r($!ctx, $coord_seq, $i, $x);
+    GEOSCoordSeq_getY_r($!ctx, $coord_seq, $i, $y);
+    @coords.push: [$x, $y];
+  }
+  @coords;
+}
+
