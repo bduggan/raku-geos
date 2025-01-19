@@ -364,22 +364,26 @@ method normalize(--> Bool) {
     return $status == 0;
 }
 
+#| Reverse the geometry
 method reverse(--> GEOS::Geometry) {
-    my $result = GEOSReverse_r($!ctx, $!geom);
-    GEOS::Geometry.new(:geom($result));
+    my $geom = GEOSReverse_r($!ctx, $!geom);
+    GEOS::Geometry.new: :$geom;
 }
 
+#| Get the precision of the geometry
 method get-precision(--> Num) {
     my num64 $precision;
     GEOSGeom_getPrecision_r($!ctx, $!geom, $precision);
     $precision;
 }
 
+#| Set the precision of the geometry
 method set-precision(Num() $precision, Bool :$preserve-topology = True --> GEOS::Geometry) {
-    my $result = GEOSGeom_setPrecision_r($!ctx, $!geom, $precision, $preserve-topology ?? 1 !! 0);
-    GEOS::Geometry.new(:geom($result), :ctx($!ctx));
+    my $geom = GEOSGeom_setPrecision_r($!ctx, $!geom, $precision, $preserve-topology ?? 1 !! 0);
+    GEOS::Geometry.new: :$geom;
 }
 
+#| Get the coordinates of the geometry
 method get-coordinates(--> List) {
   my $coord_seq = GEOSGeom_getCoordSeq_r($!ctx, $!geom);
   my uint32 $size;
