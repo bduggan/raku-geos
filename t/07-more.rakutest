@@ -1,7 +1,7 @@
 use Test;
 use GEOS::Geometry;
 
-plan 57;
+plan 58;
 
 # Test point coordinates
 my $point = GEOS::Geometry.from-geojson('{"type":"Point","coordinates":[1,4]}');
@@ -154,9 +154,9 @@ my $unified = $multi_polygon.unary-union;
 ok $unified.get-num-geometries == 1, 'overlapping polygons were unified';
 
 # Test normalization
-my $unnormalized = GEOS::Geometry.from-geojson('{"type":"LineString","coordinates":[[2,2],[1,1],[0,0]]}');
-my $normalized = $unnormalized.normalize;
-is $normalized.wkt, 'LINESTRING (0 0, 1 1, 2 2)', 'geometry was normalized';
+my $norm = GEOS::Geometry.from-geojson('{"type":"LineString","coordinates":[[2,2],[1,1],[0,0]]}');
+ok $norm.normalize, 'normalized geometry';
+is $norm.wkt, 'LINESTRING (0 0, 1 1, 2 2)', 'geometry was normalized';
 
 my $line = GEOS::Geometry.from-geojson('{"type":"LineString","coordinates":[[0,0],[1,1],[2,2]]}');
 my @coords = $line.get-coordinates;

@@ -282,3 +282,198 @@ method equals(
 
 Check if the geometry is equal to another geometry
 
+### method distance-to
+
+```raku
+method distance-to(
+    GEOS::Geometry $other
+) returns Num
+```
+
+Get the distance to another geometry
+
+### method hausdorff-distance
+
+```raku
+method hausdorff-distance(
+    GEOS::Geometry $other
+) returns Num
+```
+
+Get the Hausdorff distance to another geometry
+
+### method oriented-envelope
+
+```raku
+method oriented-envelope() returns GEOS::Geometry
+```
+
+Get the oriented envelope of the geometry
+
+### method minimum-circle
+
+```raku
+method minimum-circle() returns GEOS::Geometry
+```
+
+Get the minimum bounding circle of the geometry
+
+### method unary-union
+
+```raku
+method unary-union() returns GEOS::Geometry
+```
+
+Get the unary union of the geometry
+
+### method snap-to
+
+```raku
+method snap-to(
+    GEOS::Geometry $other,
+    Num(Any) $tolerance
+) returns GEOS::Geometry
+```
+
+Snap the geometry to another geometry within a specified tolerance
+
+### method shared-paths
+
+```raku
+method shared-paths(
+    GEOS::Geometry $other
+) returns GEOS::Geometry
+```
+
+Get the shared paths between two geometries
+
+### method get-num-geometries
+
+```raku
+method get-num-geometries() returns Int
+```
+
+Get the number of geometries in a geometry collection
+
+### method get-geometry-n
+
+```raku
+method get-geometry-n(
+    Int $n
+) returns GEOS::Geometry
+```
+
+Get a specific geometry from a geometry collection
+
+### method get-exterior-ring
+
+```raku
+method get-exterior-ring() returns GEOS::Geometry
+```
+
+Get the exterior ring of a polygon
+
+### method get-num-interior-rings
+
+```raku
+method get-num-interior-rings() returns Int
+```
+
+Get the number of interior rings of a polygon
+
+### method get-interior-ring-n
+
+```raku
+method get-interior-ring-n(
+    Int $n
+) returns GEOS::Geometry
+```
+
+Get a specific interior ring of a polygon
+
+### method covers
+
+```raku
+method covers(
+    GEOS::Geometry $other
+) returns Bool
+```
+
+Check if the geometry covers another geometry
+
+### method covered-by
+
+```raku
+method covered-by(
+    GEOS::Geometry $other
+) returns Bool
+```
+
+Check if the geometry is covered by another geometry
+
+### method crosses
+
+```raku
+method crosses(
+    GEOS::Geometry $other
+) returns Bool
+```
+
+Check if the geometry crosses another geometry
+
+### method disjoint
+
+```raku
+method disjoint(
+    GEOS::Geometry $other
+) returns Bool
+```
+
+Check if the geometry is disjoint from another geometry
+
+### method project
+
+```raku
+method project(
+    GEOS::Geometry $other
+) returns Num
+```
+
+Distance of a point projected onto a line from the start of a line
+
+### method project-normalized
+
+```raku
+method project-normalized(
+    GEOS::Geometry $other
+) returns Num
+```
+
+Measuring from the start of a line, return a point that is a proportion from the start. The geometry must be a line.
+
+### method frechet-distance
+
+```raku
+method frechet-distance(
+    GEOS::Geometry $other
+) returns Num
+```
+
+Frechet distance between two geometries
+
+### method make-valid
+
+```raku
+method make-valid() returns GEOS::Geometry
+```
+
+Make the geometry valid
+
+### method normalize
+
+```raku
+method normalize() returns Bool
+```
+
+Normalize the geometry
+

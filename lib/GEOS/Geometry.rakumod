@@ -231,12 +231,15 @@ method equals(GEOS::Geometry $other --> Bool) {
 }
 
 # Distance Operations
+
+#| Get the distance to another geometry
 method distance-to(GEOS::Geometry $other --> Num) {
     my num64 $distance;
     GEOSDistance_r($!ctx, $!geom, $other.geom, $distance);
     $distance;
 }
 
+#| Get the Hausdorff distance to another geometry
 method hausdorff-distance(GEOS::Geometry $other --> Num) {
     my num64 $distance;
     GEOSHausdorffDistance_r($!ctx, $!geom, $other.geom, $distance);
@@ -244,84 +247,103 @@ method hausdorff-distance(GEOS::Geometry $other --> Num) {
 }
 
 # Additional Geometric Operations
+#| Get the oriented envelope of the geometry
 method oriented-envelope(--> GEOS::Geometry) {
-    my $result = GEOSMinimumRotatedRectangle_r($!ctx, $!geom);
-    GEOS::Geometry.new(:geom($result), :ctx($!ctx));
+    my $geom = GEOSMinimumRotatedRectangle_r($!ctx, $!geom);
+    GEOS::Geometry.new: :$geom;
 }
 
+#| Get the minimum bounding circle of the geometry
 method minimum-circle(--> GEOS::Geometry) {
-    my $result = GEOSMinimumBoundingCircle_r($!ctx, $!geom);
-    GEOS::Geometry.new(:geom($result), :ctx($!ctx));
+    my $geom = GEOSMinimumBoundingCircle_r($!ctx, $!geom);
+    GEOS::Geometry.new: :$geom;
 }
 
-
+#| Get the unary union of the geometry
 method unary-union(--> GEOS::Geometry) {
-    my $result = GEOSUnaryUnion_r($!ctx, $!geom);
-    GEOS::Geometry.new(:geom($result), :ctx($!ctx));
+    my $geom = GEOSUnaryUnion_r($!ctx, $!geom);
+    GEOS::Geometry.new: :$geom;
 }
 
+#| Snap the geometry to another geometry within a specified tolerance
 method snap-to(GEOS::Geometry $other, Num() $tolerance --> GEOS::Geometry) {
-    my $result = GEOSSnap_r($!ctx, $!geom, $other.geom, $tolerance);
-    GEOS::Geometry.new(:geom($result), :ctx($!ctx));
+    my $geom = GEOSSnap_r($!ctx, $!geom, $other.geom, $tolerance);
+    GEOS::Geometry.new: :$geom;
 }
 
+#| Get the shared paths between two geometries
 method shared-paths(GEOS::Geometry $other --> GEOS::Geometry) {
-    my $result = GEOSSharedPaths_r($!ctx, $!geom, $other.geom);
-    GEOS::Geometry.new(:geom($result), :ctx($!ctx));
+    my $geom = GEOSSharedPaths_r($!ctx, $!geom, $other.geom);
+    GEOS::Geometry.new: :$geom;
 }
 
 # Topology operations
+
+#| Get the number of geometries in a geometry collection
 method get-num-geometries(--> Int) {
     GEOSGetNumGeometries_r($!ctx, $!geom);
 }
 
+#| Get a specific geometry from a geometry collection
 method get-geometry-n(Int $n --> GEOS::Geometry) {
-    my $result = GEOSGetGeometryN_r($!ctx, $!geom, $n);
-    GEOS::Geometry.new(:geom($result), :ctx($!ctx));
+    my $geom = GEOSGetGeometryN_r($!ctx, $!geom, $n);
+    GEOS::Geometry.new: :$geom;
 }
 
+#| Get the exterior ring of a polygon
 method get-exterior-ring(--> GEOS::Geometry) {
-    my $result = GEOSGetExteriorRing_r($!ctx, $!geom);
-    GEOS::Geometry.new(:geom($result), :ctx($!ctx));
+    my $geom = GEOSGetExteriorRing_r($!ctx, $!geom);
+    GEOS::Geometry.new: :$geom;
 }
 
+#| Get the number of interior rings of a polygon
 method get-num-interior-rings(--> Int) {
     GEOSGetNumInteriorRings_r($!ctx, $!geom);
 }
 
+#| Get a specific interior ring of a polygon
 method get-interior-ring-n(Int $n --> GEOS::Geometry) {
-    my $result = GEOSGetInteriorRingN_r($!ctx, $!geom, $n);
-    GEOS::Geometry.new(:geom($result), :ctx($!ctx));
+    my $geom = GEOSGetInteriorRingN_r($!ctx, $!geom, $n);
+    GEOS::Geometry.new: :$geom;
 }
 
 # Additional spatial predicates
+#| Check if the geometry covers another geometry
 method covers(GEOS::Geometry $other --> Bool) {
-    ? GEOSCovers_r($!ctx, $!geom, $other.geom);
+    soo GEOSCovers_r($!ctx, $!geom, $other.geom);
 }
 
+#| Check if the geometry is covered by another geometry
 method covered-by(GEOS::Geometry $other --> Bool) {
-    ? GEOSCoveredBy_r($!ctx, $!geom, $other.geom);
+    soo GEOSCoveredBy_r($!ctx, $!geom, $other.geom);
 }
 
+#| Check if the geometry crosses another geometry
 method crosses(GEOS::Geometry $other --> Bool) {
     ? GEOSCrosses_r($!ctx, $!geom, $other.geom);
 }
 
+#| Check if the geometry is disjoint from another geometry
 method disjoint(GEOS::Geometry $other --> Bool) {
-    ? GEOSDisjoint_r($!ctx, $!geom, $other.geom);
+    soo GEOSDisjoint_r($!ctx, $!geom, $other.geom);
 }
 
 # Distance and other metrics
+
+#| Distance of a point projected onto a line from the start of a line
 method project(GEOS::Geometry $other --> Num) {
     my num64 $result = GEOSProject_r($!ctx, $!geom, $other.geom);
     $result;
 }
 
+#| Measuring from the start of a line, return a point that is a proportion from
+#| the start. The geometry must be a line.
 method project-normalized(GEOS::Geometry $other --> Num) {
     my num64 $result = GEOSProjectNormalized_r($!ctx, $!geom, $other.geom);
     $result;
 }
 
+#| Frechet distance between two geometries
 method frechet-distance(GEOS::Geometry $other --> Num) {
     my num64 $distance;
     GEOSFrechetDistance_r($!ctx, $!geom, $other.geom, $distance);
@@ -329,26 +351,17 @@ method frechet-distance(GEOS::Geometry $other --> Num) {
 }
 
 # Validation and fixing
+#| Make the geometry valid
 method make-valid(--> GEOS::Geometry) {
-    my $result = GEOSMakeValid_r($!ctx, $!geom);
-    GEOS::Geometry.new(:geom($result), :ctx($!ctx));
+    my $geom = GEOSMakeValid_r($!ctx, $!geom);
+    GEOS::Geometry.new: :$geom;
 }
 
-method normalize(--> GEOS::Geometry) {
+#| Normalize the geometry
+method normalize(--> Bool) {
     # GEOSNormalize_r modifies in place and returns an int status
     my $status = GEOSNormalize_r($!ctx, $!geom);
-    die "Normalization failed; $status" if $status != 0;
-    
-    # Return a new geometry that's a copy of the normalized one
-    my $writer = GEOSWKTWriter_create_r($!ctx);
-    my $wkt = GEOSWKTWriter_write_r($!ctx, $writer, $!geom);
-    GEOSWKTWriter_destroy_r($!ctx, $writer);
-    
-    my $reader = GEOSWKTReader_create_r($!ctx);
-    my $new_geom = GEOSWKTReader_read_r($!ctx, $reader, $wkt);
-    GEOSWKTReader_destroy_r($!ctx, $reader);
-    
-    GEOS::Geometry.new(:geom($new_geom), :ctx($!ctx));
+    return $status == 0;
 }
 
 method reverse(--> GEOS::Geometry) {
