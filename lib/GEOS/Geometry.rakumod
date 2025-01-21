@@ -45,8 +45,7 @@ method from-wkt(Str $wkt) {
     my $reader = GEOSWKTReader_create_r($ctx);
     my $geom = GEOSWKTReader_read_r($ctx, $reader, $wkt);
     die "Failed to parse WKT" unless $geom;
-    #GEOSWKTReader_destroy_r($ctx, $reader);
-    say "parsed wkt: $geom";
+    GEOSWKTReader_destroy_r($ctx, $reader);
     self.new(:geom($geom));
 }
 
@@ -396,41 +395,78 @@ method set-precision(Num() $precision, Bool :$preserve-topology = True --> GEOS:
 
 #| Get the coordinates of the geometry
 method get-coordinates(--> List) {
-    # First check the geometry type
     my $type = GEOSGeomTypeId_r($!ctx, $!geom);
     
-    if $type == 3 {  # GEOS_POLYGON
-        # For polygons, need to get the exterior ring first
-        my $ring = GEOSGetExteriorRing_r($!ctx, $!geom);
-        return [] unless $ring;  # Safety check
-        
-        my $coord_seq = GEOSGeom_getCoordSeq_r($!ctx, $ring);
-        my uint32 $size;
-        my $ret = GEOSCoordSeq_getSize_r($!ctx, $coord_seq, $size);
-        die "error getting size" unless $ret;
-        
-        my @coords;
-        for ^$size -> $i {
-            my num64 ($x, $y);
-            GEOSCoordSeq_getX_r($!ctx, $coord_seq, $i, $x);
-            GEOSCoordSeq_getY_r($!ctx, $coord_seq, $i, $y);
-            @coords.push: [$x, $y];
+    given $type {
+        when 0 {  # GEOS_POINT
+            return self!get-coords-from-seq($!geom);
         }
-        return @coords;
+        when 1 {  # GEOS_LINESTRING
+            return self!get-coords-from-seq($!geom);
+        }
+        when 3 {  # GEOS_POLYGON
+            my $ring = GEOSGetExteriorRing_r($!ctx, $!geom);
+            return [] unless $ring;
+            return self!get-coords-from-seq($ring);
+        }
+        when 4 {  # GEOS_MULTIPOINT
+            return self!get-coords-from-collection();
+        }
+        when 5 {  # GEOS_MULTILINESTRING
+            return self!get-coords-from-collection();
+        }
+        when 6 {  # GEOS_MULTIPOLYGON
+            my @all-coords;
+            my $num-geoms = GEOSGetNumGeometries_r($!ctx, $!geom);
+            return [] unless $num-geoms > 0;
+            
+            for ^$num-geoms -> $i {
+                my $poly = GEOSGetGeometryN_r($!ctx, $!geom, $i);
+                next unless $poly;
+                my $ring = GEOSGetExteriorRing_r($!ctx, $poly);
+                next unless $ring;
+                @all-coords.push: self!get-coords-from-seq($ring);
+            }
+            return @all-coords;
+        }
+        default {
+            die "Unsupported geometry type: $type";
+        }
     }
-    
-    # Original code for other geometry types
-    my $coord_seq = GEOSGeom_getCoordSeq_r($!ctx, $!geom);
+}
+
+# Private method to handle coordinate sequence extraction
+method !get-coords-from-seq($geom --> List) {
+    my $coord_seq = GEOSGeom_getCoordSeq_r($!ctx, $geom);
+    return [] unless $coord_seq;
+
     my uint32 $size;
     my $ret = GEOSCoordSeq_getSize_r($!ctx, $coord_seq, $size);
-    die "error getting size" unless $ret;
+    return [] unless $ret;
     
     my @coords;
     for ^$size -> $i {
         my num64 ($x, $y);
-        GEOSCoordSeq_getX_r($!ctx, $coord_seq, $i, $x);
-        GEOSCoordSeq_getY_r($!ctx, $coord_seq, $i, $y);
-        @coords.push: [$x, $y];
+        my $x_ret = GEOSCoordSeq_getX_r($!ctx, $coord_seq, $i, $x);
+        my $y_ret = GEOSCoordSeq_getY_r($!ctx, $coord_seq, $i, $y);
+        
+        if $x_ret && $y_ret {
+            @coords.push: [$x, $y];
+        }
     }
     @coords;
+}
+
+# Private method to handle collections
+method !get-coords-from-collection(--> List) {
+    my @all-coords;
+    my $num-geoms = GEOSGetNumGeometries_r($!ctx, $!geom);
+    return [] unless $num-geoms > 0;
+    
+    for ^$num-geoms -> $i {
+        my $geom = GEOSGetGeometryN_r($!ctx, $!geom, $i);
+        next unless $geom;
+        @all-coords.push: self!get-coords-from-seq($geom);
+    }
+    @all-coords;
 }

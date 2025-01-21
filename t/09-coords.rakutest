@@ -1,0 +1,36 @@
+#!raku
+#
+use Test;
+
+use JSON::Fast;
+use GEOS::Geometry;
+
+plan 14;
+
+my $g = GEOS::Geometry.from-wkt('POINT(1 1)');
+is from-json( $g.geojson ), { type => 'Point', coordinates => [1, 1] }, 'point';
+is $g.get-coordinates[**], [1, 1], 'point coordinates';
+is $g.get-coordinates, [1, 1], 'point coordinates';
+
+$g = GEOS::Geometry.from-wkt('LINESTRING(0 0, 1 1, 2 2)');
+is from-json( $g.geojson ), { type => 'LineString', coordinates => [[0, 0], [1, 1], [2, 2]] }, 'linestring';
+is $g.get-coordinates[**], [[0, 0], [1, 1], [2, 2]], 'linestring coordinates';
+is $g.get-coordinates, [[0, 0], [1, 1], [2, 2]], 'linestring coordinates';
+
+$g = GEOS::Geometry.from-wkt('POLYGON((0 0, 0 1, 1 1, 1 0, 0 0))');
+is from-json( $g.geojson ), { type => 'Polygon', coordinates => [[[0, 0], [0, 1], [1, 1], [1, 0], [0, 0]]] }, 'polygon';
+is $g.get-coordinates, [[[0, 0], [0, 1], [1, 1], [1, 0], [0, 0]]], 'polygon coordinates';
+
+$g = GEOS::Geometry.from-wkt('MULTIPOINT(0 0, 1 1)');
+is from-json( $g.geojson ), { type => 'MultiPoint', coordinates => [[0, 0], [1, 1]] }, 'multipoint';
+is $g.get-coordinates, [[0, 0], [1, 1]], 'multipoint coordinates';
+
+$g = GEOS::Geometry.from-wkt('MULTILINESTRING((0 0, 1 1, 2 2), (3 3, 4 4, 5 5))');
+is from-json( $g.geojson ), { type => 'MultiLineString', coordinates => [[[0, 0], [1, 1], [2, 2]], [[3, 3], [4, 4], [5, 5]]] }, 'multilinestring';
+is $g.get-coordinates, [[[0, 0], [1, 1], [2, 2]], [[3, 3], [4, 4], [5, 5]]], 'multilinestring coordinates';
+
+$g = GEOS::Geometry.from-wkt('MULTIPOLYGON(((0 0, 0 1, 1 1, 1 0, 0 0)), ((2 2, 2 3, 3 3, 3 2, 2 2)))');
+is from-json( $g.geojson )<coordinates>[0], [[[0, 0], [0, 1], [1, 1], [1, 0], [0, 0]]], 'multipolygon 1';
+is from-json( $g.geojson )<coordinates>[1], [[[2, 2], [2, 3], [3, 3], [3, 2], [2, 2]]], 'multipolygon 2';
+
+done-testing;
