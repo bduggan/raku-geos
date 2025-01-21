@@ -16,7 +16,7 @@
     "depends" : [ "Log::Async", "JSON::Fast" ],
     "description" : "Raku bindings and wrappers for libgeos",
     "test-depends" : [ ],
-    "version" : "0.0.4",
+    "version" : "0.0.5",
     "license" : "MIT",
     "authors" : [
         "Brian Duggan"

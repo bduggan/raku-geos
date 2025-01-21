@@ -1,3 +1,7 @@
+0.0.5 2025-01-21
+ - from-wkt
+ - improve coords, especially coords for polygons and multipolygons
+
 0.0.4 2025-01-19
  - many changes: added dozens of methods to GEOS::Geometry
  - deprecate calculator
