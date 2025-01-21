@@ -25,6 +25,16 @@ method from-geojson(
 
 Create a geometry from GeoJSON
 
+### method from-wkt
+
+```raku
+method from-wkt(
+    Str $wkt
+) returns Mu
+```
+
+Create a geometry from WKT
+
 ### method geojson
 
 ```raku
