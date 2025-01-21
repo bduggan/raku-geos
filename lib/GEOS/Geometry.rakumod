@@ -39,6 +39,17 @@ method from-geojson(Str $geojson) {
     self.new(:geom($geom));
 }
 
+#| Create a geometry from WKT
+method from-wkt(Str $wkt) {
+    my $ctx = GEOS_init_r();
+    my $reader = GEOSWKTReader_create_r($ctx);
+    my $geom = GEOSWKTReader_read_r($ctx, $reader, $wkt);
+    die "Failed to parse WKT" unless $geom;
+    #GEOSWKTReader_destroy_r($ctx, $reader);
+    say "parsed wkt: $geom";
+    self.new(:geom($geom));
+}
+
 #| Serialize the geometry to GeoJSON
 method geojson(Bool :$indent = False) {
     my $writer = GEOSGeoJSONWriter_create_r($!ctx);
@@ -385,16 +396,41 @@ method set-precision(Num() $precision, Bool :$preserve-topology = True --> GEOS:
 
 #| Get the coordinates of the geometry
 method get-coordinates(--> List) {
-  my $coord_seq = GEOSGeom_getCoordSeq_r($!ctx, $!geom);
-  my uint32 $size;
-  GEOSCoordSeq_getSize_r($!ctx, $coord_seq, $size);
-  my @coords;
-  for ^$size -> $i {
-    my num64 ($x, $y);
-    GEOSCoordSeq_getX_r($!ctx, $coord_seq, $i, $x);
-    GEOSCoordSeq_getY_r($!ctx, $coord_seq, $i, $y);
-    @coords.push: [$x, $y];
-  }
-  @coords;
+    # First check the geometry type
+    my $type = GEOSGeomTypeId_r($!ctx, $!geom);
+    
+    if $type == 3 {  # GEOS_POLYGON
+        # For polygons, need to get the exterior ring first
+        my $ring = GEOSGetExteriorRing_r($!ctx, $!geom);
+        return [] unless $ring;  # Safety check
+        
+        my $coord_seq = GEOSGeom_getCoordSeq_r($!ctx, $ring);
+        my uint32 $size;
+        my $ret = GEOSCoordSeq_getSize_r($!ctx, $coord_seq, $size);
+        die "error getting size" unless $ret;
+        
+        my @coords;
+        for ^$size -> $i {
+            my num64 ($x, $y);
+            GEOSCoordSeq_getX_r($!ctx, $coord_seq, $i, $x);
+            GEOSCoordSeq_getY_r($!ctx, $coord_seq, $i, $y);
+            @coords.push: [$x, $y];
+        }
+        return @coords;
+    }
+    
+    # Original code for other geometry types
+    my $coord_seq = GEOSGeom_getCoordSeq_r($!ctx, $!geom);
+    my uint32 $size;
+    my $ret = GEOSCoordSeq_getSize_r($!ctx, $coord_seq, $size);
+    die "error getting size" unless $ret;
+    
+    my @coords;
+    for ^$size -> $i {
+        my num64 ($x, $y);
+        GEOSCoordSeq_getX_r($!ctx, $coord_seq, $i, $x);
+        GEOSCoordSeq_getY_r($!ctx, $coord_seq, $i, $y);
+        @coords.push: [$x, $y];
+    }
+    @coords;
 }
-
